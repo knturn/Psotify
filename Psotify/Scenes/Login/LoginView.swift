@@ -51,8 +51,8 @@ struct LoginView: View {
     private var webViewContent: some View {
         Group {
             if let url = viewModel.getSpotifyAuthURL() {
-                WebView(url: url) { _ in
-                    print(url.absoluteString)
+                WebView(url: url) { authCodeURL in
+                    viewModel.handleLogin(with: authCodeURL)
                 }
                     .edgesIgnoringSafeArea(.all)
             } else {
