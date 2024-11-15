@@ -15,4 +15,5 @@ struct Constants {
     static let redirectURI = Bundle.main.object(forInfoDictionaryKey: "Redirect_URL") as? String
     static let scope = "user-read-private user-read-email"
     static let authState = "TRUE"
+    static let localStorageTokenModelKey = "TOKENMODEL"
 }
