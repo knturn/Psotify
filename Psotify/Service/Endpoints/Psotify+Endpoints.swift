@@ -43,11 +43,11 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
         switch self {
         case .authCode:
             guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: authBaseString) else { return nil }
+                  let url = URL(string: "https://" + authBaseString) else { return nil }
             return url.appendingPathComponent("authorize")
         case .token, .refreshToken:
             guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: authBaseString) else { return nil }
+                  let url = URL(string: "https://" + authBaseString) else { return nil }
             return url.appendingPathComponent("api/token")
         }
     }
