@@ -18,8 +18,12 @@ extension LoginViewModel {
     }
 
     func handleLogin(with url: URL) {
-        let code = self.extractCode(from: url)
-        print(code ?? "")
+        guard let codeData = self.extractCode(from: url)?.toData() else { return }
+        do {
+            try KeyChainManager.save(key: KeyChainManager.authCode, data: codeData)
+        } catch {
+         print(error)
+        }
     }
 
     private func extractCode(from url: URL) -> String? {

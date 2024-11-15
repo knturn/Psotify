@@ -30,6 +30,10 @@
 		77EE45022CE74829004A7EAD /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45012CE74829004A7EAD /* Images.swift */; };
 		77EE45062CE75F81004A7EAD /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45052CE75F81004A7EAD /* WebView.swift */; };
 		77EE45082CE7613A004A7EAD /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45072CE7613A004A7EAD /* LoginViewModel.swift */; };
+		77EE450B2CE776EE004A7EAD /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE450A2CE776EE004A7EAD /* StorageManager.swift */; };
+		77EE450D2CE77DFA004A7EAD /* KeyChainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE450C2CE77DFA004A7EAD /* KeyChainManager.swift */; };
+		77EE45102CE77F1E004A7EAD /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE450F2CE77F1E004A7EAD /* String+Extensions.swift */; };
+		77EE45122CE77F3B004A7EAD /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45112CE77F3B004A7EAD /* Data+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +83,10 @@
 		77EE45012CE74829004A7EAD /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		77EE45052CE75F81004A7EAD /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		77EE45072CE7613A004A7EAD /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		77EE450A2CE776EE004A7EAD /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		77EE450C2CE77DFA004A7EAD /* KeyChainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManager.swift; sourceTree = "<group>"; };
+		77EE450F2CE77F1E004A7EAD /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		77EE45112CE77F3B004A7EAD /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +137,7 @@
 		777C60FF2CE6F4ED0085EF2F /* Psotify */ = {
 			isa = PBXGroup;
 			children = (
+				77EE45092CE776DC004A7EAD /* Managers */,
 				77EE45032CE75F5D004A7EAD /* Utilities */,
 				777C614B2CE706BD0085EF2F /* Configurations */,
 				777C61482CE701550085EF2F /* Resources */,
@@ -209,6 +218,8 @@
 			isa = PBXGroup;
 			children = (
 				777C61372CE6FC7D0085EF2F /* View+Extensions.swift */,
+				77EE450F2CE77F1E004A7EAD /* String+Extensions.swift */,
+				77EE45112CE77F3B004A7EAD /* Data+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -307,6 +318,15 @@
 				77EE45052CE75F81004A7EAD /* WebView.swift */,
 			);
 			path = ViewRepresentables;
+			sourceTree = "<group>";
+		};
+		77EE45092CE776DC004A7EAD /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				77EE450A2CE776EE004A7EAD /* StorageManager.swift */,
+				77EE450C2CE77DFA004A7EAD /* KeyChainManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -440,14 +460,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				777C61332CE6F9E10085EF2F /* Navigation+Modifier.swift in Sources */,
+				77EE45102CE77F1E004A7EAD /* String+Extensions.swift in Sources */,
 				777C612C2CE6F8E10085EF2F /* TabbarView.swift in Sources */,
 				777C613F2CE6FF2D0085EF2F /* HTTPStatusCases.swift in Sources */,
 				777C61472CE701120085EF2F /* Psotify+Endpoints.swift in Sources */,
 				77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */,
 				777C613B2CE6FEBC0085EF2F /* NetworkService.swift in Sources */,
 				77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */,
+				77EE450D2CE77DFA004A7EAD /* KeyChainManager.swift in Sources */,
 				777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */,
 				77EE45082CE7613A004A7EAD /* LoginViewModel.swift in Sources */,
+				77EE450B2CE776EE004A7EAD /* StorageManager.swift in Sources */,
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
 				777C614A2CE701600085EF2F /* Constants.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
@@ -455,6 +478,7 @@
 				777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */,
 				777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */,
 				77EE45022CE74829004A7EAD /* Images.swift in Sources */,
+				77EE45122CE77F3B004A7EAD /* Data+Extensions.swift in Sources */,
 				777C61302CE6F9890085EF2F /* Navigation.swift in Sources */,
 				777C61352CE6FB770085EF2F /* MainViewModel.swift in Sources */,
 			);
