@@ -1,0 +1,13 @@
+//
+//  Release.xcconfig
+//  Psotify
+//
+//  Created by Turan, Kaan on 15.11.2024.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+CLIENT_ID = 95f7154960eb41519824a15d71b62b9d
+CLIENT_SECRET = fe3a621135d4409fb685ea28842ceaf3
+REDIRECT_URI = https://open.spotify.com

@@ -23,6 +23,8 @@
 		777C613F2CE6FF2D0085EF2F /* HTTPStatusCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C613E2CE6FF2D0085EF2F /* HTTPStatusCases.swift */; };
 		777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61412CE6FF7B0085EF2F /* NetworkServiceErrors.swift */; };
 		777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61432CE6FFB50085EF2F /* ErrorResponse.swift */; };
+		777C61472CE701120085EF2F /* Psotify+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61462CE701120085EF2F /* Psotify+Endpoints.swift */; };
+		777C614A2CE701600085EF2F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61492CE701600085EF2F /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,11 @@
 		777C613E2CE6FF2D0085EF2F /* HTTPStatusCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatusCases.swift; sourceTree = "<group>"; };
 		777C61412CE6FF7B0085EF2F /* NetworkServiceErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceErrors.swift; sourceTree = "<group>"; };
 		777C61432CE6FFB50085EF2F /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
+		777C61462CE701120085EF2F /* Psotify+Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Psotify+Endpoints.swift"; sourceTree = "<group>"; };
+		777C61492CE701600085EF2F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		777C614C2CE706E70085EF2F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		777C614D2CE706FA0085EF2F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		77EE44F92CE72E81004A7EAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +119,8 @@
 		777C60FF2CE6F4ED0085EF2F /* Psotify */ = {
 			isa = PBXGroup;
 			children = (
+				777C614B2CE706BD0085EF2F /* Configurations */,
+				777C61482CE701550085EF2F /* Resources */,
 				777C613C2CE6FF130085EF2F /* Models */,
 				777C61392CE6FEAD0085EF2F /* Service */,
 				777C612E2CE6F9750085EF2F /* Helpers */,
@@ -195,6 +204,7 @@
 		777C61392CE6FEAD0085EF2F /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				777C61452CE700F60085EF2F /* Endpoints */,
 				777C613A2CE6FEBC0085EF2F /* NetworkService.swift */,
 			);
 			path = Service;
@@ -216,6 +226,32 @@
 				777C61432CE6FFB50085EF2F /* ErrorResponse.swift */,
 			);
 			path = Errors;
+			sourceTree = "<group>";
+		};
+		777C61452CE700F60085EF2F /* Endpoints */ = {
+			isa = PBXGroup;
+			children = (
+				777C61462CE701120085EF2F /* Psotify+Endpoints.swift */,
+			);
+			path = Endpoints;
+			sourceTree = "<group>";
+		};
+		777C61482CE701550085EF2F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				77EE44F92CE72E81004A7EAD /* Info.plist */,
+				777C61492CE701600085EF2F /* Constants.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		777C614B2CE706BD0085EF2F /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				777C614C2CE706E70085EF2F /* Debug.xcconfig */,
+				777C614D2CE706FA0085EF2F /* Release.xcconfig */,
+			);
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -351,9 +387,11 @@
 				777C61332CE6F9E10085EF2F /* Navigation+Modifier.swift in Sources */,
 				777C612C2CE6F8E10085EF2F /* TabbarView.swift in Sources */,
 				777C613F2CE6FF2D0085EF2F /* HTTPStatusCases.swift in Sources */,
+				777C61472CE701120085EF2F /* Psotify+Endpoints.swift in Sources */,
 				777C613B2CE6FEBC0085EF2F /* NetworkService.swift in Sources */,
 				777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */,
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
+				777C614A2CE701600085EF2F /* Constants.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
 				777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */,
 				777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */,
@@ -397,6 +435,7 @@
 /* Begin XCBuildConfiguration section */
 		777C611F2CE6F4F30085EF2F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 777C614C2CE706E70085EF2F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -452,6 +491,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Psotify;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -460,6 +500,7 @@
 		};
 		777C61202CE6F4F30085EF2F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 777C614D2CE706FA0085EF2F /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -508,6 +549,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = Psotify;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -516,6 +558,7 @@
 		};
 		777C61222CE6F4F30085EF2F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 777C614C2CE706E70085EF2F /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -524,6 +567,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Psotify/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Psotify/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -551,6 +595,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Psotify/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Psotify/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -570,6 +615,7 @@
 		};
 		777C61252CE6F4F30085EF2F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 777C614C2CE706E70085EF2F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -650,7 +696,7 @@
 				777C61202CE6F4F30085EF2F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		777C61212CE6F4F30085EF2F /* Build configuration list for PBXNativeTarget "Psotify" */ = {
 			isa = XCConfigurationList;
@@ -659,7 +705,7 @@
 				777C61232CE6F4F30085EF2F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		777C61242CE6F4F30085EF2F /* Build configuration list for PBXNativeTarget "PsotifyTests" */ = {
 			isa = XCConfigurationList;
@@ -668,7 +714,7 @@
 				777C61262CE6F4F30085EF2F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		777C61272CE6F4F30085EF2F /* Build configuration list for PBXNativeTarget "PsotifyUITests" */ = {
 			isa = XCConfigurationList;
@@ -677,7 +723,7 @@
 				777C61292CE6F4F30085EF2F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
