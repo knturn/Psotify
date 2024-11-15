@@ -25,6 +25,9 @@
 		777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61432CE6FFB50085EF2F /* ErrorResponse.swift */; };
 		777C61472CE701120085EF2F /* Psotify+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61462CE701120085EF2F /* Psotify+Endpoints.swift */; };
 		777C614A2CE701600085EF2F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61492CE701600085EF2F /* Constants.swift */; };
+		77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FB2CE741AC004A7EAD /* Launch.swift */; };
+		77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FE2CE741CE004A7EAD /* LoginView.swift */; };
+		77EE45022CE74829004A7EAD /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45012CE74829004A7EAD /* Images.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +72,9 @@
 		777C614C2CE706E70085EF2F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		777C614D2CE706FA0085EF2F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		77EE44F92CE72E81004A7EAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		77EE44FB2CE741AC004A7EAD /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
+		77EE44FE2CE741CE004A7EAD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		77EE45012CE74829004A7EAD /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,7 +132,6 @@
 				777C612E2CE6F9750085EF2F /* Helpers */,
 				777C612A2CE6F8CC0085EF2F /* Scenes */,
 				777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */,
-				777C61042CE6F4F00085EF2F /* Assets.xcassets */,
 				777C61062CE6F4F00085EF2F /* Preview Content */,
 			);
 			path = Psotify;
@@ -160,6 +165,8 @@
 		777C612A2CE6F8CC0085EF2F /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				77EE44FD2CE741B0004A7EAD /* Launch */,
+				77EE44FA2CE74199004A7EAD /* Login */,
 				777C612D2CE6F8F70085EF2F /* Main */,
 			);
 			path = Scenes;
@@ -169,8 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				777C61022CE6F4ED0085EF2F /* MainView.swift */,
-				777C612B2CE6F8E10085EF2F /* TabbarView.swift */,
 				777C61342CE6FB770085EF2F /* MainViewModel.swift */,
+				777C612B2CE6F8E10085EF2F /* TabbarView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -239,6 +246,7 @@
 		777C61482CE701550085EF2F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77EE45002CE74819004A7EAD /* Images */,
 				77EE44F92CE72E81004A7EAD /* Info.plist */,
 				777C61492CE701600085EF2F /* Constants.swift */,
 			);
@@ -252,6 +260,31 @@
 				777C614D2CE706FA0085EF2F /* Release.xcconfig */,
 			);
 			path = Configurations;
+			sourceTree = "<group>";
+		};
+		77EE44FA2CE74199004A7EAD /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				77EE44FE2CE741CE004A7EAD /* LoginView.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		77EE44FD2CE741B0004A7EAD /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				77EE44FB2CE741AC004A7EAD /* Launch.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		77EE45002CE74819004A7EAD /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				777C61042CE6F4F00085EF2F /* Assets.xcassets */,
+				77EE45012CE74829004A7EAD /* Images.swift */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -388,13 +421,16 @@
 				777C612C2CE6F8E10085EF2F /* TabbarView.swift in Sources */,
 				777C613F2CE6FF2D0085EF2F /* HTTPStatusCases.swift in Sources */,
 				777C61472CE701120085EF2F /* Psotify+Endpoints.swift in Sources */,
+				77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */,
 				777C613B2CE6FEBC0085EF2F /* NetworkService.swift in Sources */,
+				77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */,
 				777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */,
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
 				777C614A2CE701600085EF2F /* Constants.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
 				777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */,
 				777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */,
+				77EE45022CE74829004A7EAD /* Images.swift in Sources */,
 				777C61302CE6F9890085EF2F /* Navigation.swift in Sources */,
 				777C61352CE6FB770085EF2F /* MainViewModel.swift in Sources */,
 			);

@@ -7,5 +7,12 @@
 
 import Foundation
 final class MainViewModel: ObservableObject {
-    
+    var loginState: UserState = .login
+}
+
+
+enum UserState {
+    case login
+    case logout
+    case inProgress
 }
