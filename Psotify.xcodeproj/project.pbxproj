@@ -28,6 +28,7 @@
 		77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FB2CE741AC004A7EAD /* Launch.swift */; };
 		77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FE2CE741CE004A7EAD /* LoginView.swift */; };
 		77EE45022CE74829004A7EAD /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45012CE74829004A7EAD /* Images.swift */; };
+		77EE45062CE75F81004A7EAD /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45052CE75F81004A7EAD /* WebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		77EE44FB2CE741AC004A7EAD /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
 		77EE44FE2CE741CE004A7EAD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		77EE45012CE74829004A7EAD /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		77EE45052CE75F81004A7EAD /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 		777C60FF2CE6F4ED0085EF2F /* Psotify */ = {
 			isa = PBXGroup;
 			children = (
+				77EE45032CE75F5D004A7EAD /* Utilities */,
 				777C614B2CE706BD0085EF2F /* Configurations */,
 				777C61482CE701550085EF2F /* Resources */,
 				777C613C2CE6FF130085EF2F /* Models */,
@@ -287,6 +290,22 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		77EE45032CE75F5D004A7EAD /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				77EE45042CE75F6D004A7EAD /* ViewRepresentables */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		77EE45042CE75F6D004A7EAD /* ViewRepresentables */ = {
+			isa = PBXGroup;
+			children = (
+				77EE45052CE75F81004A7EAD /* WebView.swift */,
+			);
+			path = ViewRepresentables;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,6 +447,7 @@
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
 				777C614A2CE701600085EF2F /* Constants.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
+				77EE45062CE75F81004A7EAD /* WebView.swift in Sources */,
 				777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */,
 				777C61442CE6FFB50085EF2F /* ErrorResponse.swift in Sources */,
 				77EE45022CE74829004A7EAD /* Images.swift in Sources */,
