@@ -10,9 +10,19 @@ import SwiftUI
 struct MainView: View {
     @StateObject var nav = Navigation()
     @StateObject var viewModel = MainViewModel()
+
     
     var body: some View {
-        TabBarView()
-            .environmentObject(nav)
+        Group {
+            switch viewModel.loginState {
+            case .login:
+                TabBarView()
+            case .logout:
+                LoginView(viewModel: LoginViewModel())
+            case .inProgress:
+                LaunchView()
+            }
+        }
+        .environmentObject(nav)
     }
 }

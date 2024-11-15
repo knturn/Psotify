@@ -11,6 +11,7 @@ enum HTTPMethod: String {
     case POST
     case PUT
     case DELETE
+    static let httpsPrefix = "https://"
 }
 
 protocol ServiceEndpointsProtocol {
@@ -43,11 +44,11 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
         switch self {
         case .authCode:
             guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: "https://" + authBaseString) else { return nil }
+                  let url = URL(string: HTTPMethod.httpsPrefix + authBaseString) else { return nil }
             return url.appendingPathComponent("authorize")
         case .token, .refreshToken:
             guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: "https://" + authBaseString) else { return nil }
+                  let url = URL(string: HTTPMethod.httpsPrefix + authBaseString) else { return nil }
             return url.appendingPathComponent("api/token")
         }
     }
@@ -59,7 +60,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
                 URLQueryItem(name: EndPointConstants.responseType, value: "code"),
                 URLQueryItem(name: EndPointConstants.clientID, value: Constants.clientID),
                 URLQueryItem(name: EndPointConstants.scope, value: Constants.scope),
-                URLQueryItem(name: EndPointConstants.redirectURI, value: Constants.redirectURI),
+                URLQueryItem(name: EndPointConstants.redirectURI, value: HTTPMethod.httpsPrefix + (Constants.redirectURI ?? "")),
                 URLQueryItem(name: EndPointConstants.state, value: Constants.authState),
                 URLQueryItem(name: EndPointConstants.showDialog, value: "TRUE")
             ]
@@ -74,7 +75,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
             return [
                 EndPointConstants.grantType: EndPointConstants.authorizationCode,
                 "code": code,
-                EndPointConstants.redirectURI: Constants.redirectURI ?? ""
+                EndPointConstants.redirectURI: HTTPMethod.httpsPrefix + (Constants.redirectURI ?? "")
             ]
         case .refreshToken(let refreshToken):
             return [
