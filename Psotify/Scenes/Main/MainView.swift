@@ -18,7 +18,7 @@ struct MainView: View {
             case .login:
                 TabBarView()
             case .logout:
-                LoginView()
+                LoginView(viewModel: LoginViewModel())
             case .inProgress:
                 LaunchView()
             }

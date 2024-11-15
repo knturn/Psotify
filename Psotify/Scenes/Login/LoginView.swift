@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct LoginView: View {
+    @State private var showWebView = false
+    @ObservedObject private var viewModel: LoginViewModel
+    
+    init(showWebView: Bool = false, viewModel: LoginViewModel) {
+        self.showWebView = showWebView
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         ZStack {
@@ -22,23 +29,42 @@ struct LoginView: View {
     }
     @ViewBuilder
     private var content: some View {
-        VStack{
-            Images.loginLogo.image
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.8,
-                       maxHeight: UIScreen.main.bounds.height * 0.8)
-                .ignoresSafeArea()
-            Spacer()
-            signInButton
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 15)
+        if showWebView {
+            webViewContent
+        } else {
+            VStack{
+                Images.loginLogo.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.8,
+                           maxHeight: UIScreen.main.bounds.height * 0.8)
+                    .ignoresSafeArea()
+                Spacer()
+                signInButton
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 15)
+            }
+        }
+       
+    }
+    
+    private var webViewContent: some View {
+        Group {
+            if let url = viewModel.getSpotifyAuthURL() {
+                WebView(url: url) { _ in
+                    print(url.absoluteString)
+                }
+                    .edgesIgnoringSafeArea(.all)
+            } else {
+                Text("Yönlendirme BAŞARISIZ oldu")
+                    .foregroundColor(.red)
+            }
         }
     }
     
     private var signInButton: some View {
         Button(action: {
-            print("Tapped")
+            showWebView.toggle()
         }) {
             Text("Sign In")
                 .foregroundColor(.white)
