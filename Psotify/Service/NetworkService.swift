@@ -24,12 +24,25 @@ final class NetworkService: NetworkServiceProtocol {
     }
     
     func fetch<T: Decodable>(request: URLRequest) async throws -> T {
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
-            throw NetworkServiceErrors.httpError(status: HTTPStatus(rawValue: (response as? HTTPURLResponse)?.statusCode ?? -1), data: data)
+        do {
+            let (data, response) = try await session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                throw NetworkServiceErrors.httpError(
+                    status: HTTPStatus(rawValue: (response as? HTTPURLResponse)?.statusCode ?? -1),
+                    data: data
+                )
+            }
+            
+            do {
+                return try JSONDecoder().decode(T.self, from: data)
+            } catch {
+                throw NetworkServiceErrors.parseFailed
+            }
+        } catch let error as URLError {
+            throw NetworkServiceErrors.URLError
+        } catch {
+            throw NetworkServiceErrors.fetchFailed
         }
-        
-        return try JSONDecoder().decode(T.self, from: data)
     }
 }
