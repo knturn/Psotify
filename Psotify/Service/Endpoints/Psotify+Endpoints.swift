@@ -11,6 +11,7 @@ enum HTTPMethod: String {
     case POST
     case PUT
     case DELETE
+    
     static let httpsPrefix = "https://"
 }
 
@@ -100,8 +101,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
     
     private var httpMethod: HTTPMethod {
         switch self {
-        case .authCode: return .GET
-        case .token, .refreshToken: return .POST
+        case .token, .refreshToken, .authCode: return .GET
         }
     }
 }

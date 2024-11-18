@@ -21,6 +21,11 @@ struct MainView: View {
                 LoginView(viewModel: LoginViewModel())
             case .inProgress:
                 LaunchView()
+                    .onAppear {
+                        Task {
+                         try await viewModel.authUseCase.checkLoginState()
+                        }
+                    }
             }
         }
         .environmentObject(nav)

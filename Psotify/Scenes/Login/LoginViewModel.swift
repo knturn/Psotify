@@ -9,6 +9,11 @@ import Foundation
 
 final class LoginViewModel: ObservableObject {
     
+    private let authUseCase: AuthUseCaseProtocol
+    
+    init(authUseCase: AuthUseCaseProtocol = AuthUseCase.shared) {
+        self.authUseCase = authUseCase
+    }
 }
 
 // MARK: Helper Funcs
@@ -17,9 +22,14 @@ extension LoginViewModel {
         PsotifyEndpoint.authCode.request?.url
     }
     
-    func handleLogin(with url: URL) {
-        guard let codeData = self.extractCode(from: url)?.toData() else { return }
-        print(self.extractCode(from: url) ?? "")
+    func handleLogin(with url: URL) async {
+        guard let code = self.extractCode(from: url) else { return }
+        do {
+           try await authUseCase.logIn(with: code)
+        } catch {
+            print(error)
+        }
+       
     }
     
     private func extractCode(from url: URL) -> String? {

@@ -52,7 +52,9 @@ struct LoginView: View {
         Group {
             if let url = viewModel.getSpotifyAuthURL() {
                 WebView(url: url) { authCodeURL in
-                    viewModel.handleLogin(with: authCodeURL)
+                    Task {
+                    await viewModel.handleLogin(with: authCodeURL)
+                    }
                 }
                 .edgesIgnoringSafeArea(.all)
             } else {
