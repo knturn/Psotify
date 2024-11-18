@@ -45,7 +45,7 @@ struct LoginView: View {
                     .padding(.horizontal, 15)
             }
         }
-       
+        
     }
     
     private var webViewContent: some View {
@@ -54,7 +54,7 @@ struct LoginView: View {
                 WebView(url: url) { authCodeURL in
                     viewModel.handleLogin(with: authCodeURL)
                 }
-                    .edgesIgnoringSafeArea(.all)
+                .edgesIgnoringSafeArea(.all)
             } else {
                 Text("Yönlendirme BAŞARISIZ oldu")
                     .foregroundColor(.red)
