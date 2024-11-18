@@ -1,5 +1,5 @@
 //
-//  KeyChainManager.swift
+//  KeyChainService.swift
 //  Psotify
 //
 //  Created by Turan, Kaan on 15.11.2024.
@@ -8,9 +8,7 @@
 import Security
 import Foundation
 
-class KeyChainManager {
-    static let authCode: String = "authCode"
-    
+class KeyChainService {
     static func save(key: String, data: Data) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword as String,
@@ -51,13 +49,9 @@ class KeyChainManager {
             return nil
         }
     }
-    
-    static func isThereSavedAuthCode() -> Bool {
-        KeyChainManager.get(key: KeyChainManager.authCode) != nil
-    }
 }
 
-extension KeyChainManager {
+extension KeyChainService {
     enum KeyChainError: Error {
         case unknown(OSStatus)
     }
