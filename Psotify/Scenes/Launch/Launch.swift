@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct LaunchView: View {
+    
     var body: some View {
         Images.launchScreen.image
-            .renderingMode(.original)
-            .scaledToFit()
+            .resizable()
+            .scaledToFill()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
     }
 }
-
 
 #Preview {
     LaunchView()

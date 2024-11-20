@@ -11,7 +11,6 @@ enum HTTPMethod: String {
     case POST
     case PUT
     case DELETE
-    static let httpsPrefix = "https://"
 }
 
 protocol ServiceEndpointsProtocol {
@@ -36,6 +35,8 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
         static let responseType = "response_type"
         static let clientID = "client_id"
         static let scope = "scope"
+        static let scopeValue = "user-read-private user-read-email"
+        static let authState = "TRUE"
         static let state = "state"
         static let showDialog = "show_dialog"
     }
@@ -43,13 +44,9 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
     var endpointURL: URL? {
         switch self {
         case .authCode:
-            guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: HTTPMethod.httpsPrefix + authBaseString) else { return nil }
-            return url.appendingPathComponent("authorize")
+            return Configuration.authBaseURL?.appendingPathComponent("authorize")
         case .token, .refreshToken:
-            guard let authBaseString = Constants.authBaseURL,
-                  let url = URL(string: HTTPMethod.httpsPrefix + authBaseString) else { return nil }
-            return url.appendingPathComponent("api/token")
+            return Configuration.authBaseURL?.appendingPathComponent("api/token")
         }
     }
     
@@ -58,10 +55,10 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
         case .authCode:
             return [
                 URLQueryItem(name: EndPointConstants.responseType, value: "code"),
-                URLQueryItem(name: EndPointConstants.clientID, value: Constants.clientID),
-                URLQueryItem(name: EndPointConstants.scope, value: Constants.scope),
-                URLQueryItem(name: EndPointConstants.redirectURI, value: HTTPMethod.httpsPrefix + (Constants.redirectURI ?? "")),
-                URLQueryItem(name: EndPointConstants.state, value: Constants.authState),
+                URLQueryItem(name: EndPointConstants.clientID, value: Configuration.clientID),
+                URLQueryItem(name: EndPointConstants.scope, value: EndPointConstants.scopeValue),
+                URLQueryItem(name: EndPointConstants.redirectURI, value: Configuration.redirectURI),
+                URLQueryItem(name: EndPointConstants.state, value: EndPointConstants.authState),
                 URLQueryItem(name: EndPointConstants.showDialog, value: "TRUE")
             ]
         default:
@@ -75,7 +72,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
             return [
                 EndPointConstants.grantType: EndPointConstants.authorizationCode,
                 "code": code,
-                EndPointConstants.redirectURI: HTTPMethod.httpsPrefix + (Constants.redirectURI ?? "")
+                EndPointConstants.redirectURI: Configuration.redirectURI
             ]
         case .refreshToken(let refreshToken):
             return [
@@ -108,14 +105,6 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
 
 // MARK: - Helper Functions
 private extension PsotifyEndpoint {
-    func createAuthorizationHeader() -> String {
-        let credentials = "\(String(describing: Constants.clientID)):\(String(describing: Constants.clientSecret))"
-        guard let data = credentials.data(using: .utf8) else {
-            fatalError("Failed to encode client credentials.")
-        }
-        return "Basic \(data.base64EncodedString())"
-    }
-    
     func urlWithParams(_ url: URL) -> URL {
         guard !params.isEmpty else { return url }
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -133,7 +122,7 @@ private extension PsotifyEndpoint {
         switch self {
         case .token, .refreshToken:
             request.setValue(EndPointConstants.urlEncoded, forHTTPHeaderField: EndPointConstants.contentType)
-            request.setValue(createAuthorizationHeader(), forHTTPHeaderField: EndPointConstants.authorization)
+            request.setValue(Configuration.authorization, forHTTPHeaderField: EndPointConstants.authorization)
         case .authCode:
             break
         }

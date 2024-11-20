@@ -9,11 +9,11 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var showWebView = false
-    @ObservedObject private var viewModel: LoginViewModel
+    @StateObject private var viewModel: LoginViewModel
     
     init(showWebView: Bool = false, viewModel: LoginViewModel) {
         self.showWebView = showWebView
-        self._viewModel = ObservedObject(wrappedValue: viewModel)
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -45,14 +45,15 @@ struct LoginView: View {
                     .padding(.horizontal, 15)
             }
         }
-        
     }
     
     private var webViewContent: some View {
         Group {
             if let url = viewModel.getSpotifyAuthURL() {
                 WebView(url: url) { authCodeURL in
-                    viewModel.handleLogin(with: authCodeURL)
+                    Task {
+                        await viewModel.handleLogin(with: authCodeURL)
+                    }
                 }
                 .edgesIgnoringSafeArea(.all)
             } else {
@@ -69,7 +70,7 @@ struct LoginView: View {
             Text("Sign In")
                 .foregroundColor(.white)
                 .padding()
-                .frame(maxWidth: .infinity) 
+                .frame(maxWidth: .infinity)
                 .background(Color.green)
                 .cornerRadius(8)
         }

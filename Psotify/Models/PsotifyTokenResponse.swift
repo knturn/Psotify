@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct PsotifyTokenResponse: Decodable {
+struct PsotifyTokenResponse: Codable {
     let accessToken: String
     let tokenType: String
     let expiresIn: Int
