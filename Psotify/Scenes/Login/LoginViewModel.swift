@@ -7,11 +7,11 @@
 
 import Foundation
 
+
 final class LoginViewModel: ObservableObject {
-    
     private let authUseCase: AuthUseCaseProtocol
     
-    init(authUseCase: AuthUseCaseProtocol = AuthUseCase.shared) {
+    init(authUseCase: AuthUseCaseProtocol) {
         self.authUseCase = authUseCase
     }
 }

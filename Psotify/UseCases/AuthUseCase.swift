@@ -20,28 +20,31 @@ final class AuthUseCase: AuthUseCaseProtocol {
         static let authCodeKey = "authCode"
         static let userStorageKey = "userAccessInfo"
     }
-    static let shared: AuthUseCaseProtocol = AuthUseCase()
-    private let networkService: NetworkServiceProtocol = NetworkService()
+    private let networkService: NetworkServiceProtocol
     
-    private var loginStatePublisher = CurrentValueSubject<UserLoginState, Never>(.inProgress)
+    private let loginStatePublisher: CurrentValueSubject<UserLoginState, Never>
     
     var loginPublisher: AnyPublisher<UserLoginState, Never>  {
         loginStatePublisher.eraseToAnyPublisher()
     }
     
-    private init() { }
-
+    init(networkService: NetworkServiceProtocol, loginStatePublisher: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
+        self.networkService = networkService
+        self.loginStatePublisher = loginStatePublisher
+    }
+    
     func logIn(with authCode: String) async throws {
         do {
-            // 1. Auth kodunu kaydet
+            // 1. Save the authentication code
             try saveAuthCode(authCode)
             
-            // 2. Token al
+            // 2. Retrieve the token
             try await fetchToken()
             
-            // 3. Giriş başarılı
+            // 3. Login successful
             loginStatePublisher.send(.login)
         } catch {
+            // Handle login failure and set state to logout
             loginStatePublisher.send(.logout)
             throw SpotifyAuthError.invalidAuthCode
         }
@@ -49,13 +52,11 @@ final class AuthUseCase: AuthUseCaseProtocol {
     
     func refreshToken() async throws {
         let model = UserDefaultsService.getElement(forKey: Constants.userStorageKey, type: PsotifyTokenStorageModel.self)
-        let refreshToken = model?.refreshToken
         do {
             guard let refreshToken = model?.refreshToken else {
                 throw SpotifyAuthError.tokenUnavailable
             }
             
-            // Refresh token endpoint çağrısı
             guard let request = PsotifyEndpoint.refreshToken(refreshToken: refreshToken).request else {
                 throw SpotifyAuthError.tokenUnavailable
             }
@@ -64,20 +65,23 @@ final class AuthUseCase: AuthUseCaseProtocol {
             try await UserDefaultsService.saveElement(model: tokenResponse.self, forKey: Constants.userStorageKey)
             loginStatePublisher.send(.login)
         } catch {
-            loginStatePublisher.send(.logout)
             throw SpotifyAuthError.tokenUnavailable
         }
     }
     
     func checkLoginState() async throws {
         do {
-            if self.isTokenExpired() {
+            guard !self.isTokenExpired() else {
                 try await refreshToken()
-            } else if self.getTokenModel() == nil {
-                try await fetchToken()
+                loginStatePublisher.send(.login)
+                return
             }
-            
-            loginStatePublisher.send(.login)
+            if KeyChainService.get(key: Constants.authCodeKey) != nil {
+                try await fetchToken()
+                loginStatePublisher.send(.login)
+            } else {
+                loginStatePublisher.send(.logout)
+            }
         } catch {
             loginStatePublisher.send(.logout)
             throw error
@@ -105,7 +109,8 @@ extension AuthUseCase {
         }
         
         let tokenResponse: PsotifyTokenResponse = try await networkService.fetch(request: request)
-        try await UserDefaultsService.saveElement(model: tokenResponse.self, forKey: Constants.userStorageKey)
+        let tokenStorage : PsotifyTokenStorageModel = .init(response: tokenResponse)
+        try await UserDefaultsService.saveElement(model: tokenStorage.self, forKey: Constants.userStorageKey)
     }
     
     private func isTokenExpired() -> Bool {

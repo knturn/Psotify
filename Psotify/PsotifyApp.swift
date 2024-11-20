@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct PsotifyApp: App {
+    let nav = Navigation()
+    
     var body: some Scene {
         WindowGroup {
             MainView()
+            .environmentObject(nav)
         }
     }
 }

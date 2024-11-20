@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject var nav = Navigation()
-    @StateObject var viewModel = MainViewModel()
-
+    @EnvironmentObject var nav: Navigation
+    @StateObject var viewModel: MainViewModel
+    
+    init(viewModel: MainViewModel = .init(networkService: NetworkService())) {
+       _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         Group {
@@ -18,7 +21,7 @@ struct MainView: View {
             case .login:
                 TabBarView()
             case .logout:
-                LoginView(viewModel: LoginViewModel())
+                LoginView(viewModel: viewModel.loginViewModel)
             case .inProgress:
                 LaunchView()
                     .onAppear {
@@ -28,6 +31,5 @@ struct MainView: View {
                     }
             }
         }
-        .environmentObject(nav)
     }
 }

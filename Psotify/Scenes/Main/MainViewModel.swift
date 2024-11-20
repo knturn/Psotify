@@ -12,9 +12,15 @@ final class MainViewModel: ObservableObject {
     @Published var loginState: UserLoginState = .inProgress
     let authUseCase: AuthUseCaseProtocol
     private var cancellables = Set<AnyCancellable>()
+    let networkService: NetworkServiceProtocol
     
-    init(authUseCase: AuthUseCaseProtocol = AuthUseCase.shared) {
-        self.authUseCase = authUseCase
+    var loginViewModel: LoginViewModel {
+        LoginViewModel(authUseCase: self.authUseCase)
+    }
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
+        self.authUseCase = AuthUseCase(networkService: networkService)
         observeLoginState()
     }
     
