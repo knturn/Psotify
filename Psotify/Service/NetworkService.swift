@@ -24,25 +24,39 @@ final class NetworkService: NetworkServiceProtocol {
     }
     
     func fetch<T: Decodable>(request: URLRequest) async throws -> T {
+        let (data, response) = try await fetchData(for: request)
+        try validateResponse(response, data: data)
+        return try decodeData(data, to: T.self)
+    }
+}
+
+// MARK: - Helper Methods
+private extension NetworkService {
+    func fetchData(for request: URLRequest) async throws -> (Data, URLResponse) {
         do {
-            let (data, response) = try await session.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
-                throw NetworkServiceErrors.httpError(
-                    status: HTTPStatus(rawValue: (response as? HTTPURLResponse)?.statusCode ?? -1),
-                    data: data
-                )
-            }
-            
-            do {
-                return try JSONDecoder().decode(T.self, from: data)
-            } catch {
-                throw NetworkServiceErrors.parseFailed
-            }
+            return try await session.data(for: request)
         } catch let error as URLError {
             throw NetworkServiceErrors.URLError
         } catch {
             throw NetworkServiceErrors.fetchFailed
+        }
+    }
+    
+    func decodeData<T: Decodable>(_ data: Data, to type: T.Type) throws -> T {
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            throw NetworkServiceErrors.parseFailed
+        }
+    }
+    
+    func validateResponse(_ response: URLResponse, data: Data) throws {
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw NetworkServiceErrors.httpError(
+                status: HTTPStatus(rawValue: statusCode),
+                data: data
+            )
         }
     }
 }
