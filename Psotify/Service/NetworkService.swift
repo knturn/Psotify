@@ -35,21 +35,13 @@ private extension NetworkService {
     func fetchData(for request: URLRequest) async throws -> (Data, URLResponse) {
         do {
             return try await session.data(for: request)
-        } catch let error as URLError {
+        } catch _ as URLError {
             throw NetworkServiceErrors.URLError
         } catch {
             throw NetworkServiceErrors.fetchFailed
         }
     }
-    
-    func decodeData<T: Decodable>(_ data: Data, to type: T.Type) throws -> T {
-        do {
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch {
-            throw NetworkServiceErrors.parseFailed
-        }
-    }
-    
+
     func validateResponse(_ response: URLResponse, data: Data) throws {
         guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
             let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
@@ -59,4 +51,12 @@ private extension NetworkService {
             )
         }
     }
+
+  func decodeData<T: Decodable>(_ data: Data, to type: T.Type) throws -> T {
+      do {
+          return try JSONDecoder().decode(T.self, from: data)
+      } catch {
+          throw NetworkServiceErrors.parseFailed
+      }
+  }
 }
