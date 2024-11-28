@@ -13,11 +13,7 @@ final class MainViewModel: ObservableObject {
     let authUseCase: AuthUseCaseProtocol
     private var cancellables = Set<AnyCancellable>()
     let networkService: NetworkServiceProtocol
-    
-    var loginViewModel: LoginViewModel {
-        LoginViewModel(authUseCase: self.authUseCase)
-    }
-    
+
     init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
         self.authUseCase = AuthUseCase(networkService: networkService)
@@ -34,9 +30,13 @@ final class MainViewModel: ObservableObject {
     }
 }
 
+//MARK: ViewModels
+extension MainViewModel {
+  var loginViewModel: LoginViewModel {
+        LoginViewModel(authUseCase: self.authUseCase)
+    }
 
-enum UserState {
-    case login
-    case logout
-    case inProgress
+  var tabbarViewModel: TabbarViewModel {
+    return TabbarViewModel(networkService: self.networkService)
+  }
 }

@@ -8,61 +8,90 @@
 import SwiftUI
 
 struct HomeView: View {
-  @EnvironmentObject var nav: Navigation
+    @EnvironmentObject var nav: Navigation
+    @StateObject private var viewModel: HomeViewModel
 
-  var body: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      HStack {
-        Text("Merhaba, Kaan")
-          .font(.title)
-          .fontWeight(.bold)
-          .foregroundStyle(.white)
-
-        Spacer()
-
-        Button(action: {
-          nav.navigate(to: .userDetail)
-        }) {
-          Image(systemName: "person.fill")
-            .font(.title2)
-            .foregroundColor(.white)
-        }
-      }
-      .padding(.horizontal)
-      .padding(.top, 16)
-
-      ScrollView {
-        VStack(spacing: 32) {
-          SectionView(
-            title: "Tavsiye Şarkılar",
-            gridItems: recommendedSongs
-          )
-
-          ForEach(recommendedSongs, id: \.title) { section in
-            HorizontalScrollableView(
-              title: section.title, albums: recommendedSongs
-            )
-          }
-        }
-
-        .padding(.horizontal)
-      }
+    init(viewModel: HomeViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
-    .background(Color.spotifyMediumGray)
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            headerView
+                .padding(.horizontal)
+                .padding(.top, 16)
+
+            ScrollView {
+                switch viewModel.screenState {
+                case .isLoading:
+                    placeholder
+                case .loaded:
+                    contentView
+                        .padding(.horizontal)
+                case .error(let message):
+                   ErrorView(message: message)
+                }
+            }
+        }
+        .task {
+            await viewModel.fetchNewReleases()
+            await viewModel.fetchUserPlaylists()
+            await viewModel.fetchUserProfile()
+        }
+        .background(.spotifyMediumGray)
+    }
+
+    private var headerView: some View {
+        HStack {
+            Text("Merhaba " + (viewModel.userModel?.displayName ?? ""))
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Button(action: {
+                nav.navigate(to: .userDetail(with: viewModel.userModel))
+            }) {
+                Image(systemName: "person.fill")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            }
+        }
+    }
+
+  private var placeholder: some View {
+    SkeletonPlaceHolderView() {
+        VStack(spacing: 8) {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 120)
+
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 16)
+
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 80, height: 16)
+        }
+    }
   }
-}
 
-// Example
-let recommendedSongs = [
-  Album(albumID: "2342", title: "Song A", imageName: "placeHolder"),
-  Album(albumID: "2342", title: "Song B", imageName: "placeHolder"),
-  Album(albumID: "2342", title: "Song C", imageName: "placeHolder"),
-  Album(albumID: "2342", title: "Song D", imageName: "placeHolder"),
-  Album(albumID: "2342", title: "Song E", imageName: "placeHolder"),
-  Album(albumID: "2342", title: "Song F", imageName: "placeHolder")
-]
-
-
-#Preview {
-  HomeView()
+    private var contentView: some View {
+        LazyVStack(spacing: 32) {
+            SectionView(
+                title: "HOT Albums",
+                gridItems: viewModel.newReleases
+            )
+            ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
+                HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
+                    .onAppear {
+                        Task {
+                            await viewModel.fetchPlaylist(for: item.id)
+                        }
+                    }
+            }
+        }
+    }
 }

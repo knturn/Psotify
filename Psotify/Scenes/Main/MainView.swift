@@ -19,7 +19,7 @@ struct MainView: View {
     Group {
       switch viewModel.loginState {
       case .login:
-        TabBarView()
+        TabBarView(viewModel: viewModel.tabbarViewModel)
       case .logout:
         LoginView(viewModel: viewModel.loginViewModel)
       case .inProgress:

@@ -9,15 +9,18 @@ import SwiftUI
 
 struct TabBarView: View {
   @EnvironmentObject var nav: Navigation
+  @StateObject private var viewModel: TabbarViewModel
 
-  init() {
+  init(viewModel: TabbarViewModel) {
+    _viewModel = StateObject(wrappedValue: viewModel)
     UITabBar.appearance().backgroundColor = .spotifyLightGray
     UITabBar.appearance().barTintColor = .spotifyLightGray
   }
 
+
   var body: some View {
     TabView(selection: $nav.selectedTab) {
-      HomeView()
+      HomeView(viewModel: viewModel.homeViewModel)
         .setNavPath($nav.homePath)
         .tabItem {
           Label("Home", systemImage: "house.fill")
