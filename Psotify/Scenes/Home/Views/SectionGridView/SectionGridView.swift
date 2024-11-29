@@ -9,8 +9,12 @@ import SwiftUI
 
 struct SectionView: View {
   @EnvironmentObject var nav: Navigation
-  let title: String
-  let gridItems: [AlbumItem]?
+  private var sectionGridViewUIModel: SectionGridViewUIModel
+
+  init(sectionGridViewUIModel: SectionGridViewUIModel) {
+    self.sectionGridViewUIModel = sectionGridViewUIModel
+  }
+
 
   private let gridLayout = [
     GridItem(.flexible()),
@@ -19,14 +23,14 @@ struct SectionView: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      Text(title)
+      Text(sectionGridViewUIModel.title)
         .font(.headline)
         .foregroundStyle(.spotifyGreen)
         .padding(.bottom, 8)
 
       LazyVGrid(columns: gridLayout, spacing: 10) {
-        if let gridItems {
-          ForEach(gridItems, id: \.id) { albumItem in
+        if let items = sectionGridViewUIModel.gridItems {
+          ForEach(items, id: \.id) { albumItem in
             HStack(spacing: 10) {
               AsyncImage(url: URL(string: albumItem.images.first?.url ?? ""),
                          content: { image in
@@ -50,7 +54,8 @@ struct SectionView: View {
               Spacer()
             }
             .onTapGesture {
-              nav.navigate(to: .albumDetail(id: albumItem.id))
+              let viewModel = sectionGridViewUIModel.getAlbumDetailViewModel(with: albumItem.id)
+              nav.navigate(to: .albumDetail(with: viewModel))
             }
           }
         }

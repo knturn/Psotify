@@ -33,7 +33,7 @@ struct LoginView: View {
             webViewContent
         } else {
             VStack{
-                Images.loginLogo.image
+                Image(.loginLogo)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.8,

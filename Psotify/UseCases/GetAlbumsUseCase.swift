@@ -8,6 +8,7 @@
 import Foundation
 protocol GetAlbumsUseCaseProtocol {
   func fetchNewReleases(limit: Int) async throws -> Albums
+  func fetchOneAlbum(with id: String) async throws -> AlbumItem
 }
 struct GetAlbumsUseCase: GetAlbumsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
@@ -27,5 +28,17 @@ struct GetAlbumsUseCase: GetAlbumsUseCaseProtocol {
 
     let newReleases: AlbumsObjectResponse = try await networkService.fetch(request: request)
     return newReleases.albums
+  }
+
+  func fetchOneAlbum(with id: String) async throws -> AlbumItem {
+    guard let accessToken else {
+      throw SpotifyAuthError.tokenUnavailable
+    }
+    guard let request = PsotifyEndpoint.album(accessToken: accessToken, id: id).request else {
+      throw SpotifyAuthError.invalidAuthCode
+    }
+
+    let album: AlbumItem = try await networkService.fetch(request: request)
+    return album
   }
 }

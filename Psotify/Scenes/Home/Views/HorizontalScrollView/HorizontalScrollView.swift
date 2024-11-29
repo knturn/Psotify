@@ -49,7 +49,8 @@ struct HorizontalScrollableView: View {
               }
               .onTapGesture {
                 if let trackId = track.track?.id {
-                  nav.navigate(to: .albumDetail(id: trackId))
+                  //TODO: navigate to player view
+                 print("navigated")
                 }
               }
             }

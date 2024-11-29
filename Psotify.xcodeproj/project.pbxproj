@@ -10,6 +10,9 @@
 		774389BA2CF87F9800143C7D /* SkeletonPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389B92CF87F9800143C7D /* SkeletonPlaceHolderView.swift */; };
 		774389BD2CF89D6F00143C7D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389BC2CF89D6F00143C7D /* ErrorView.swift */; };
 		774389BF2CF8A28600143C7D /* ScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389BE2CF8A28600143C7D /* ScreenState.swift */; };
+		774389C22CF8B02600143C7D /* AlbumDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389C12CF8B02600143C7D /* AlbumDetailView.swift */; };
+		774389C62CF8E24B00143C7D /* AlbumDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389C52CF8E24B00143C7D /* AlbumDetailViewModel.swift */; };
+		774389C82CF9FBB700143C7D /* SectionGridViewUIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389C72CF9FBB700143C7D /* SectionGridViewUIModel.swift */; };
 		777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */; };
 		777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61022CE6F4ED0085EF2F /* MainView.swift */; };
 		777C61052CE6F4F00085EF2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 777C61042CE6F4F00085EF2F /* Assets.xcassets */; };
@@ -48,7 +51,6 @@
 		77DB74A82CF8306E00693592 /* SubModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DB74A72CF8306E00693592 /* SubModels.swift */; };
 		77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FB2CE741AC004A7EAD /* Launch.swift */; };
 		77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE44FE2CE741CE004A7EAD /* LoginView.swift */; };
-		77EE45022CE74829004A7EAD /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45012CE74829004A7EAD /* Images.swift */; };
 		77EE45062CE75F81004A7EAD /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45052CE75F81004A7EAD /* WebView.swift */; };
 		77EE45082CE7613A004A7EAD /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE45072CE7613A004A7EAD /* LoginViewModel.swift */; };
 		77EE450D2CE77DFA004A7EAD /* KeyChainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EE450C2CE77DFA004A7EAD /* KeyChainService.swift */; };
@@ -84,6 +86,9 @@
 		774389B92CF87F9800143C7D /* SkeletonPlaceHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonPlaceHolderView.swift; sourceTree = "<group>"; };
 		774389BC2CF89D6F00143C7D /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		774389BE2CF8A28600143C7D /* ScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenState.swift; sourceTree = "<group>"; };
+		774389C12CF8B02600143C7D /* AlbumDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetailView.swift; sourceTree = "<group>"; };
+		774389C52CF8E24B00143C7D /* AlbumDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetailViewModel.swift; sourceTree = "<group>"; };
+		774389C72CF9FBB700143C7D /* SectionGridViewUIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionGridViewUIModel.swift; sourceTree = "<group>"; };
 		777C60FD2CE6F4ED0085EF2F /* Psotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Psotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PsotifyApp.swift; sourceTree = "<group>"; };
 		777C61022CE6F4ED0085EF2F /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -128,7 +133,6 @@
 		77EE44F92CE72E81004A7EAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77EE44FB2CE741AC004A7EAD /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
 		77EE44FE2CE741CE004A7EAD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		77EE45012CE74829004A7EAD /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		77EE45052CE75F81004A7EAD /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		77EE45072CE7613A004A7EAD /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		77EE450C2CE77DFA004A7EAD /* KeyChainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainService.swift; sourceTree = "<group>"; };
@@ -182,6 +186,24 @@
 				774389BC2CF89D6F00143C7D /* ErrorView.swift */,
 			);
 			path = ErrorView;
+			sourceTree = "<group>";
+		};
+		774389C02CF8B01300143C7D /* AlbumDetailView */ = {
+			isa = PBXGroup;
+			children = (
+				774389C12CF8B02600143C7D /* AlbumDetailView.swift */,
+				774389C52CF8E24B00143C7D /* AlbumDetailViewModel.swift */,
+			);
+			path = AlbumDetailView;
+			sourceTree = "<group>";
+		};
+		774389C92CF9FE1100143C7D /* SectionGridView */ = {
+			isa = PBXGroup;
+			children = (
+				77DB74802CF4A82B00693592 /* SectionGridView.swift */,
+				774389C72CF9FBB700143C7D /* SectionGridViewUIModel.swift */,
+			);
+			path = SectionGridView;
 			sourceTree = "<group>";
 		};
 		777C60F42CE6F4ED0085EF2F = {
@@ -249,6 +271,7 @@
 		777C612A2CE6F8CC0085EF2F /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				774389C02CF8B01300143C7D /* AlbumDetailView */,
 				774389BB2CF89D6200143C7D /* ErrorView */,
 				774389B82CF87F7E00143C7D /* SkeletonView */,
 				77DB747C2CF4A2EF00693592 /* Profile */,
@@ -390,8 +413,8 @@
 		77DB747F2CF4A81600693592 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				774389C92CF9FE1100143C7D /* SectionGridView */,
 				77DB74A02CF728D900693592 /* HorizontalScrollView */,
-				77DB74802CF4A82B00693592 /* SectionGridView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -434,7 +457,6 @@
 		77EE45002CE74819004A7EAD /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				77EE45012CE74829004A7EAD /* Images.swift */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -610,7 +632,9 @@
 				77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */,
 				777C613B2CE6FEBC0085EF2F /* NetworkService.swift in Sources */,
 				77DB749B2CF70E3C00693592 /* GetPlaylistsUseCase.swift in Sources */,
+				774389C82CF9FBB700143C7D /* SectionGridViewUIModel.swift in Sources */,
 				77DB74832CF4A88600693592 /* HorizontalScrollView.swift in Sources */,
+				774389C22CF8B02600143C7D /* AlbumDetailView.swift in Sources */,
 				77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */,
 				77EE450D2CE77DFA004A7EAD /* KeyChainService.swift in Sources */,
 				77DB74812CF4A82B00693592 /* SectionGridView.swift in Sources */,
@@ -623,6 +647,7 @@
 				77EE451D2CEB2979004A7EAD /* UserLoginState.swift in Sources */,
 				77DB749D2CF70EF600693592 /* UserPlaylistsResponse.swift in Sources */,
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
+				774389C62CF8E24B00143C7D /* AlbumDetailViewModel.swift in Sources */,
 				77DB74892CF5939700693592 /* UserProfileResponse.swift in Sources */,
 				774389BA2CF87F9800143C7D /* SkeletonPlaceHolderView.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
@@ -638,7 +663,6 @@
 				77EE45162CE783DE004A7EAD /* Spotify+AuthErrors.swift in Sources */,
 				77DB748D2CF61BA200693592 /* AlbumsObjectResponse.swift in Sources */,
 				77DB74942CF6DEB300693592 /* TabbarViewModel.swift in Sources */,
-				77EE45022CE74829004A7EAD /* Images.swift in Sources */,
 				77DB74912CF6D38700693592 /* AlbumItem.swift in Sources */,
 				77EE45242CECA229004A7EAD /* ConfigurationProtocol.swift in Sources */,
 				77EE45122CE77F3B004A7EAD /* Data+Extensions.swift in Sources */,
