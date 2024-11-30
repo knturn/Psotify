@@ -11,8 +11,7 @@ struct LoginView: View {
     @State private var showWebView = false
     @StateObject private var viewModel: LoginViewModel
     
-    init(showWebView: Bool = false, viewModel: LoginViewModel) {
-        self.showWebView = showWebView
+  init(viewModel: LoginViewModel = .init()) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     

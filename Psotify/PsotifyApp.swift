@@ -15,6 +15,13 @@ struct PsotifyApp: App {
         WindowGroup {
             MainView()
             .environmentObject(nav)
+            .task {
+              do {
+                  try Configuration.validate()
+              } catch {
+                  fatalError("Configuration Error: \(error)")
+              }
+            }
         }
     }
 }

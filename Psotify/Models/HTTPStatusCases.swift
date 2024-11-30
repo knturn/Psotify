@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 enum HTTPStatus: Int, Error {
     // Default
     case notValidCode = 0
@@ -83,4 +84,11 @@ enum HTTPStatus: Int, Error {
     case notExtended = 510
     case networkAuthenticationRequired = 511
     case networkConnectTimeoutError = 599
+}
+
+enum HTTPMethod: String {
+    case GET
+    case POST
+    case PUT
+    case DELETE
 }

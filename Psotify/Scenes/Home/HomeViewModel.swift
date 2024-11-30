@@ -18,9 +18,9 @@ class HomeViewModel: ObservableObject {
   @Published var playlistModels: [String: PlayListDetailResponse] = [:]
   @Published var screenState: ScreenState = .isLoading
   
-  init(getUserProfileUseCase: GetUserProfileUseCaseProtocol,
-       getAlbumsUseCase: GetAlbumsUseCaseProtocol,
-       getPlaylistUseCase: GetPlaylistsUseCaseProtocol) {
+  init(getUserProfileUseCase: GetUserProfileUseCaseProtocol = GetUserProfileUseCase(),
+       getAlbumsUseCase: GetAlbumsUseCaseProtocol = GetAlbumsUseCase(),
+       getPlaylistUseCase: GetPlaylistsUseCaseProtocol = GetPlaylistsUseCase()) {
     self.getUserProfileUseCase = getUserProfileUseCase
     self.getAlbumsUseCase = getAlbumsUseCase
     self.getPlaylistUseCase = getPlaylistUseCase

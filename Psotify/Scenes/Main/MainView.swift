@@ -11,7 +11,7 @@ struct MainView: View {
   @EnvironmentObject var nav: Navigation
   @StateObject var viewModel: MainViewModel
 
-  init(viewModel: MainViewModel = .init(networkService: NetworkService())) {
+  init(viewModel: MainViewModel = .init()) {
     _viewModel = StateObject(wrappedValue: viewModel)
   }
 
@@ -19,17 +19,16 @@ struct MainView: View {
     Group {
       switch viewModel.loginState {
       case .login:
-        TabBarView(viewModel: viewModel.tabbarViewModel)
+        TabBarView()
       case .logout:
-        LoginView(viewModel: viewModel.loginViewModel)
+        LoginView()
       case .inProgress:
         LaunchView()
-          .onAppear {
-            Task {
-              try await viewModel.authUseCase.checkLoginState()
-            }
+          .task {
+            await viewModel.checkLoginState()
           }
       }
+
     }
   }
 }

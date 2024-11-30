@@ -12,17 +12,13 @@ protocol GetPlaylistsUseCaseProtocol {
 }
 struct GetPlaylistsUseCase: GetPlaylistsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
-  private let accessToken = UserDefaultsService.getElement(forKey: UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self)?.accessToken
 
-  init(networkService: NetworkServiceProtocol) {
+  init(networkService: NetworkServiceProtocol = NetworkService()) {
     self.networkService = networkService
   }
   
   func fetchPlaylist(with id: String) async throws -> PlayListDetailResponse? {
-    guard let accessToken else {
-      throw SpotifyAuthError.tokenUnavailable
-    }
-    guard let request = PsotifyEndpoint.playlist(accessToken: accessToken, id: id).request else {
+    guard let request = PsotifyEndpoint.playlist(id: id).request else {
       throw SpotifyAuthError.invalidAuthCode
     }
 
@@ -31,10 +27,7 @@ struct GetPlaylistsUseCase: GetPlaylistsUseCaseProtocol {
   }
 
   func fetchUserPlaylist() async throws -> [PlaylistItem]? {
-    guard let accessToken else {
-      throw SpotifyAuthError.tokenUnavailable
-    }
-    guard let request = PsotifyEndpoint.userPlaylists(accessToken: accessToken).request else {
+    guard let request = PsotifyEndpoint.userPlaylists.request else {
       throw SpotifyAuthError.invalidAuthCode
     }
 

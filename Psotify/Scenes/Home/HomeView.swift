@@ -11,7 +11,7 @@ struct HomeView: View {
     @EnvironmentObject var nav: Navigation
     @StateObject private var viewModel: HomeViewModel
 
-    init(viewModel: HomeViewModel) {
+  init(viewModel: HomeViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
