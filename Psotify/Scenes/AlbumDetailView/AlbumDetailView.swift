@@ -62,7 +62,7 @@ struct AlbumDetailView: View {
         trackRow(for: track)
           .onTapGesture {
             if let id = track.id {
-              let viewModel: PlayerViewModel = .init(getSongUseCase: self.viewModel.getSongUseCaseProtocol, id: id)
+              let viewModel: PlayerViewModel = .init(id: id)
               nav.navigate(to: .playerView(with: viewModel))
             }
           }

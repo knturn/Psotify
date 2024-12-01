@@ -48,8 +48,7 @@ struct HorizontalScrollableView: View {
                   .foregroundColor(.white)
               }
               .onTapGesture {
-                if let trackId = track.track?.id,
-                let songUseCase = model?.songUseCase {
+                if let trackId = track.track?.id {
                   let viewModel = PlayerViewModel(id: trackId)
                   nav.navigate(to: .playerView(with: viewModel))
                 }

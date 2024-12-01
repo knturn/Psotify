@@ -9,15 +9,13 @@ import SwiftUI
 
 class AlbumDetailViewModel: ObservableObject {
   private let getAlbumUseCase: GetAlbumsUseCaseProtocol
-  let getSongUseCaseProtocol: GetSongUseCaseProtocol
   private let id: String
   @Published var screenState: ScreenState = .isLoading
   @Published var songList: AlbumItem?
 
-  init(getAlbumUseCase: GetAlbumsUseCaseProtocol, getSongUseCaseProtocol: GetSongUseCaseProtocol, id: String) {
+  init(getAlbumUseCase: GetAlbumsUseCaseProtocol = AppDIContainer.shared.resolve(GetAlbumsUseCaseProtocol.self), id: String) {
     self.id = id
     self.getAlbumUseCase = getAlbumUseCase
-    self.getSongUseCaseProtocol = getSongUseCaseProtocol
   }
 
 

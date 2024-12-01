@@ -17,12 +17,13 @@
 		774389D02CFA136400143C7D /* GetSongUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389CF2CFA136400143C7D /* GetSongUseCase.swift */; };
 		774389D22CFA148F00143C7D /* SongResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389D12CFA148F00143C7D /* SongResponse.swift */; };
 		774389D42CFA17D400143C7D /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389D32CFA17D400143C7D /* PlayerViewModel.swift */; };
+		774389D92CFB4DF800143C7D /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389D82CFB4DF800143C7D /* RequestBuilder.swift */; };
+		774389DB2CFB5EF900143C7D /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DA2CFB5EF900143C7D /* RequestFactory.swift */; };
 		774389DD2CFC473600143C7D /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DC2CFC473600143C7D /* PlayerView.swift */; };
 		774389DF2CFC507500143C7D /* ModifiedButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DE2CFC507500143C7D /* ModifiedButtonView.swift */; };
 		774389E52CFC7E9500143C7D /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389E42CFC7E9500143C7D /* AppDIContainer.swift */; };
 		774389E72CFC82CF00143C7D /* piano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 774389E62CFC82CF00143C7D /* piano.mp3 */; };
-		774389D92CFB4DF800143C7D /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389D82CFB4DF800143C7D /* RequestBuilder.swift */; };
-		774389DB2CFB5EF900143C7D /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DA2CFB5EF900143C7D /* RequestFactory.swift */; };
+		774389E92CFCBAE300143C7D /* PsotifyApp+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389E82CFCBAE300143C7D /* PsotifyApp+Extension.swift */; };
 		777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */; };
 		777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61022CE6F4ED0085EF2F /* MainView.swift */; };
 		777C61052CE6F4F00085EF2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 777C61042CE6F4F00085EF2F /* Assets.xcassets */; };
@@ -102,12 +103,13 @@
 		774389CF2CFA136400143C7D /* GetSongUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSongUseCase.swift; sourceTree = "<group>"; };
 		774389D12CFA148F00143C7D /* SongResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongResponse.swift; sourceTree = "<group>"; };
 		774389D32CFA17D400143C7D /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		774389D82CFB4DF800143C7D /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
+		774389DA2CFB5EF900143C7D /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		774389DC2CFC473600143C7D /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		774389DE2CFC507500143C7D /* ModifiedButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifiedButtonView.swift; sourceTree = "<group>"; };
 		774389E42CFC7E9500143C7D /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
 		774389E62CFC82CF00143C7D /* piano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = piano.mp3; sourceTree = "<group>"; };
-		774389D82CFB4DF800143C7D /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
-		774389DA2CFB5EF900143C7D /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
+		774389E82CFCBAE300143C7D /* PsotifyApp+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PsotifyApp+Extension.swift"; sourceTree = "<group>"; };
 		777C60FD2CE6F4ED0085EF2F /* Psotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Psotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PsotifyApp.swift; sourceTree = "<group>"; };
 		777C61022CE6F4ED0085EF2F /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */,
+				774389E82CFCBAE300143C7D /* PsotifyApp+Extension.swift */,
 				777C614B2CE706BD0085EF2F /* Configurations */,
 				77EE451E2CEB340D004A7EAD /* UseCases */,
 				77EE45032CE75F5D004A7EAD /* Utilities */,
@@ -690,6 +693,7 @@
 				77DB749D2CF70EF600693592 /* UserPlaylistsResponse.swift in Sources */,
 				777C61422CE6FF7B0085EF2F /* NetworkServiceErrors.swift in Sources */,
 				774389C62CF8E24B00143C7D /* AlbumDetailViewModel.swift in Sources */,
+				774389E92CFCBAE300143C7D /* PsotifyApp+Extension.swift in Sources */,
 				774389D42CFA17D400143C7D /* PlayerViewModel.swift in Sources */,
 				774389D22CFA148F00143C7D /* SongResponse.swift in Sources */,
 				77DB74892CF5939700693592 /* UserProfileResponse.swift in Sources */,

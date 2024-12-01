@@ -54,8 +54,7 @@ struct SectionView: View {
               Spacer()
             }
             .onTapGesture {
-              let viewModel = sectionGridViewUIModel.getAlbumDetailViewModel(with: albumItem.id)
-              nav.navigate(to: .albumDetail(with: viewModel))
+              nav.navigate(to: .albumDetail(with: .init(id: albumItem.id)))
             }
           }
         }

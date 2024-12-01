@@ -96,8 +96,4 @@ class HomeViewModel: ObservableObject {
       screenState = .loaded
     }
   }
-
-  var sectionGridViewUIModel: SectionGridViewUIModel {
-    .init(title: "HOT Albums", gridItems: self.newReleases, albumsUseCase: self.getAlbumsUseCase, songUseCase: self.getSongUseCase)
-  }
 }

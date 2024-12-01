@@ -10,17 +10,9 @@ import Foundation
 struct SectionGridViewUIModel {
   let title: String
   let gridItems: [AlbumItem]?
-  let albumsUseCase: GetAlbumsUseCaseProtocol
-  let songUseCase: GetSongUseCaseProtocol
 
-  init(title: String, gridItems: [AlbumItem]?, albumsUseCase: GetAlbumsUseCaseProtocol, songUseCase: GetSongUseCaseProtocol) {
+  init(title: String, gridItems: [AlbumItem]?) {
     self.title = title
     self.gridItems = gridItems
-    self.albumsUseCase = albumsUseCase
-    self.songUseCase = songUseCase
-  }
-
-  func getAlbumDetailViewModel(with id: String) -> AlbumDetailViewModel {
-    AlbumDetailViewModel(getAlbumUseCase: albumsUseCase, getSongUseCaseProtocol: songUseCase, id: id)
   }
 }

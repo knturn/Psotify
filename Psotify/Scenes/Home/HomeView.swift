@@ -81,7 +81,7 @@ struct HomeView: View {
     private var contentView: some View {
         LazyVStack(spacing: 32) {
             SectionView(
-              sectionGridViewUIModel: viewModel.sectionGridViewUIModel
+              sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
             )
             ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
               HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
