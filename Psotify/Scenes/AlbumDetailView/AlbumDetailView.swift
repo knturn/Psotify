@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlbumDetailView: View {
+  @EnvironmentObject var nav: Navigation
   @StateObject var viewModel: AlbumDetailViewModel
 
   init(viewModel: AlbumDetailViewModel) {
@@ -59,6 +60,12 @@ struct AlbumDetailView: View {
         .padding()
       List(viewModel.songList?.tracks?.items ?? [], id: \.id) { track in
         trackRow(for: track)
+          .onTapGesture {
+            if let id = track.id {
+              let viewModel: PlayerViewModel = .init(getSongUseCase: self.viewModel.getSongUseCaseProtocol, id: id)
+              nav.navigate(to: .playerView(with: viewModel))
+            }
+          }
       }
       .listStyle(.plain)
       .background(.clear)

@@ -23,13 +23,14 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
     case token(code: String)
     case refreshToken(refreshToken: String)
     case authCode
-    case newReleases(accessToken: String, limit: String)
-    case userProfile(accessToken: String)
+    case newReleases(limit: String)
+    case userProfile
 //  Deprecated
 //  case featuredPlaylist(accessToken: String)
-    case userPlaylists(accessToken: String)
-    case playlist(accessToken: String, id: String)
-    case album(accessToken: String, id: String)
+    case userPlaylists
+    case playlist(id: String)
+    case album(id: String)
+    case track(id: String)
 
     private enum EndPointConstants {
         static let grantType = "grant_type"
@@ -56,13 +57,15 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
             return Configuration.authBaseURL?.appendingPathComponent("api/token")
         case .newReleases:
           return Configuration.apiBaseURL?.appendingPathComponent("browse/new-releases")
-        case .album(_, let id):
+        case .album(let id):
           return Configuration.apiBaseURL?.appendingPathComponent("albums/\(id)")
+        case .track(let id):
+          return Configuration.apiBaseURL?.appendingPathComponent("tracks/\(id)")
         case .userProfile:
           return Configuration.apiBaseURL?.appendingPathComponent("me")
 //        case .featuredPlaylist:
 //          return Configuration.apiBaseURL?.appendingPathComponent("browse/featured-playlists")
-        case .playlist(_, let id):
+        case .playlist(let id):
           return Configuration.apiBaseURL?.appendingPathComponent("playlists/\(id)")
         case .userPlaylists:
           return Configuration.apiBaseURL?.appendingPathComponent("me/playlists")
@@ -80,7 +83,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
                 URLQueryItem(name: EndPointConstants.state, value: EndPointConstants.authState),
                 URLQueryItem(name: EndPointConstants.showDialog, value: "TRUE")
             ]
-        case .newReleases(_, let limit):
+        case .newReleases(let limit):
           return [
             URLQueryItem(name: "limit", value: limit)
           ]
@@ -120,7 +123,7 @@ enum PsotifyEndpoint: ServiceEndpointsProtocol {
     
     private var httpMethod: HTTPMethod {
         switch self {
-        case .authCode, .newReleases, .userProfile, .playlist, .userPlaylists, .album: return .GET
+        case .authCode, .newReleases, .userProfile, .playlist, .userPlaylists, .album, .track: return .GET
         case .token, .refreshToken: return .POST
         }
     }
@@ -148,8 +151,15 @@ private extension PsotifyEndpoint {
             request.setValue(Configuration.authorization, forHTTPHeaderField: EndPointConstants.authorization)
         case .authCode:
             break
-        case .newReleases(let accessToken, _), .album(let accessToken, _), .userProfile(let accessToken), .playlist(let accessToken, _), .userPlaylists(let accessToken):
-          request.setValue("Bearer " + accessToken, forHTTPHeaderField: EndPointConstants.authorization )
+        case .newReleases, .album, .userProfile, .playlist, .userPlaylists, .track:
+          request.setValue(getBearerHeader(), forHTTPHeaderField: EndPointConstants.authorization )
         }
     }
+
+  private func getBearerHeader() -> String {
+    guard let accessToken = UserDefaultsService.getElement(forKey: UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self)?.accessToken else {
+      return ""
+    }
+    return "Bearer " + accessToken
+  }
 }

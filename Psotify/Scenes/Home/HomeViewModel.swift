@@ -11,21 +11,24 @@ class HomeViewModel: ObservableObject {
   private let getUserProfileUseCase: GetUserProfileUseCaseProtocol
   private let getAlbumsUseCase: GetAlbumsUseCaseProtocol
   private let getPlaylistUseCase: GetPlaylistsUseCaseProtocol
-  
+  private let getSongUseCase: GetSongUseCaseProtocol
+
   @Published var newReleases: [AlbumItem]?
   @Published var userModel: SpotifyUserProfile?
   @Published var featuredPlayList: [PlaylistItem]?
   @Published var playlistModels: [String: PlayListDetailResponse] = [:]
   @Published var screenState: ScreenState = .isLoading
-  
-  init(getUserProfileUseCase: GetUserProfileUseCaseProtocol,
-       getAlbumsUseCase: GetAlbumsUseCaseProtocol,
-       getPlaylistUseCase: GetPlaylistsUseCaseProtocol) {
+
+  init(getUserProfileUseCase: GetUserProfileUseCaseProtocol = AppDIContainer.shared.resolve(GetUserProfileUseCaseProtocol.self),
+       getAlbumsUseCase: GetAlbumsUseCaseProtocol = AppDIContainer.shared.resolve(GetAlbumsUseCaseProtocol.self),
+       getPlaylistUseCase: GetPlaylistsUseCaseProtocol = AppDIContainer.shared.resolve(GetPlaylistsUseCaseProtocol.self),
+       getSongUseCase: GetSongUseCaseProtocol = AppDIContainer.shared.resolve(GetSongUseCaseProtocol.self)) {
     self.getUserProfileUseCase = getUserProfileUseCase
     self.getAlbumsUseCase = getAlbumsUseCase
     self.getPlaylistUseCase = getPlaylistUseCase
+    self.getSongUseCase = getSongUseCase
   }
-  
+
   func fetchUserProfile() async {
     do {
       let userModel = try await getUserProfileUseCase.fetchUserInfo()
@@ -39,7 +42,7 @@ class HomeViewModel: ObservableObject {
       }
     }
   }
-  
+
   func fetchNewReleases() async {
     do {
       let albums = try await getAlbumsUseCase.fetchNewReleases(limit: 6)
@@ -53,7 +56,7 @@ class HomeViewModel: ObservableObject {
       }
     }
   }
-  
+
   func fetchUserPlaylists() async {
     do {
       let featuredPlayList = try await getPlaylistUseCase.fetchUserPlaylist()
@@ -67,7 +70,7 @@ class HomeViewModel: ObservableObject {
       }
     }
   }
-  
+
   func fetchPlaylist(for id: String) async {
     do {
       let playlist = try await getPlaylistUseCase.fetchPlaylist(with: id)
@@ -80,13 +83,14 @@ class HomeViewModel: ObservableObject {
       }
     }
   }
-  
+
+
   func createHorizontalScrollUIModel(_ id: String) -> HorizontalScrollViewUIModel? {
     guard let model = self.playlistModels[id] else { return nil }
-    let uıModel = HorizontalScrollViewUIModel(response: model)
-    return uıModel
+    let uiModel = HorizontalScrollViewUIModel(response: model)
+    return uiModel
   }
-  
+
   private func updateScreenState() {
     if newReleases != nil, userModel != nil, featuredPlayList != nil {
       screenState = .loaded
@@ -94,6 +98,6 @@ class HomeViewModel: ObservableObject {
   }
 
   var sectionGridViewUIModel: SectionGridViewUIModel {
-    .init(title: "HOT Albums", gridItems: self.newReleases, useCase: self.getAlbumsUseCase)
+    .init(title: "HOT Albums", gridItems: self.newReleases, albumsUseCase: self.getAlbumsUseCase, songUseCase: self.getSongUseCase)
   }
 }
