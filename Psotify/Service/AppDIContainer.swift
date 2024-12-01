@@ -27,7 +27,8 @@ final class AppDIContainer: AppDICProtocol {
   func resolve<Service>(_ type: Service.Type) -> Service {
     let key = String(describing: Service.self)
     guard let service = services[key] as? Service else {
-      fatalError("kapat git")
+      //TODO: handle error
+      fatalError("service dependency injection error")
     }
     return service
   }

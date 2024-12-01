@@ -85,6 +85,10 @@ class PsotifyRequestFactory {
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("me/playlists") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
+        case .track(id: let id):
+          guard let url = Configuration.apiBaseURL?.appendingPathComponent("tracks/\(id)") else { return nil }
+          builder = RequestBuilder(url: url, httpMethod: .GET)
+              .setHeaders([EndPointConstants.authorization: getBearerHeader()])
         }
 
         return builder.build()

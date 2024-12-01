@@ -47,24 +47,3 @@ final class Configuration: AppConfigurationProtocol {
         return url
     }
 }
-
-extension Configuration {
-    static func validate() throws {
-        guard !clientID.isEmpty else {
-            throw ConfigurationError.missingValue("CLIENT_ID is missing or empty.")
-        }
-        guard !clientSecret.isEmpty else {
-            throw ConfigurationError.missingValue("CLIENT_SECRET is missing or empty.")
-        }
-        guard authBaseURL != nil else {
-            throw ConfigurationError.missingValue("AUTH_BASE_URL is missing or invalid.")
-        }
-        guard apiBaseURL != nil else {
-            throw ConfigurationError.missingValue("API_BASE_URL is missing or invalid.")
-        }
-    }
-
-  enum ConfigurationError: Error {
-        case missingValue(String)
-    }
-}
