@@ -7,14 +7,14 @@
 
 import Foundation
 
-protocol AppDICProtocol {
+protocol AppDIContainerProtocol {
   func bind<Service>(service: Service.Type, resolver: @escaping (AppDIContainer) -> Service)
   func resolve<Service>(_ type: Service.Type) -> Service
   func makeNavigation() -> Navigation
 }
 
-final class AppDIContainer: AppDICProtocol {
-  static let shared: AppDICProtocol = AppDIContainer()
+final class AppDIContainer: AppDIContainerProtocol {
+  static let shared: AppDIContainerProtocol = AppDIContainer()
   private var services: [String: Any] = [:]
 
   private init(){}
