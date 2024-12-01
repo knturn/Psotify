@@ -21,6 +21,8 @@
 		774389DF2CFC507500143C7D /* ModifiedButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DE2CFC507500143C7D /* ModifiedButtonView.swift */; };
 		774389E52CFC7E9500143C7D /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389E42CFC7E9500143C7D /* AppDIContainer.swift */; };
 		774389E72CFC82CF00143C7D /* piano.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 774389E62CFC82CF00143C7D /* piano.mp3 */; };
+		774389D92CFB4DF800143C7D /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389D82CFB4DF800143C7D /* RequestBuilder.swift */; };
+		774389DB2CFB5EF900143C7D /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389DA2CFB5EF900143C7D /* RequestFactory.swift */; };
 		777C61012CE6F4ED0085EF2F /* PsotifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */; };
 		777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C61022CE6F4ED0085EF2F /* MainView.swift */; };
 		777C61052CE6F4F00085EF2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 777C61042CE6F4F00085EF2F /* Assets.xcassets */; };
@@ -104,6 +106,8 @@
 		774389DE2CFC507500143C7D /* ModifiedButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifiedButtonView.swift; sourceTree = "<group>"; };
 		774389E42CFC7E9500143C7D /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
 		774389E62CFC82CF00143C7D /* piano.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = piano.mp3; sourceTree = "<group>"; };
+		774389D82CFB4DF800143C7D /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
+		774389DA2CFB5EF900143C7D /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		777C60FD2CE6F4ED0085EF2F /* Psotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Psotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		777C61002CE6F4ED0085EF2F /* PsotifyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PsotifyApp.swift; sourceTree = "<group>"; };
 		777C61022CE6F4ED0085EF2F /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -351,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				774389E42CFC7E9500143C7D /* AppDIContainer.swift */,
+				774389D82CFB4DF800143C7D /* RequestBuilder.swift */,
 				777C613A2CE6FEBC0085EF2F /* NetworkService.swift */,
 				77EE450C2CE77DFA004A7EAD /* KeyChainService.swift */,
 				77EE45172CEA6ADB004A7EAD /* UserDefaultsService.swift */,
@@ -394,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				777C61462CE701120085EF2F /* Psotify+Endpoints.swift */,
+				774389DA2CFB5EF900143C7D /* RequestFactory.swift */,
 			);
 			path = Endpoints;
 			sourceTree = "<group>";
@@ -667,6 +673,7 @@
 				77DB749B2CF70E3C00693592 /* GetPlaylistsUseCase.swift in Sources */,
 				774389C82CF9FBB700143C7D /* SectionGridViewUIModel.swift in Sources */,
 				77DB74832CF4A88600693592 /* HorizontalScrollView.swift in Sources */,
+				774389DB2CFB5EF900143C7D /* RequestFactory.swift in Sources */,
 				774389C22CF8B02600143C7D /* AlbumDetailView.swift in Sources */,
 				77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */,
 				774389D02CFA136400143C7D /* GetSongUseCase.swift in Sources */,
@@ -688,6 +695,7 @@
 				77DB74892CF5939700693592 /* UserProfileResponse.swift in Sources */,
 				774389BA2CF87F9800143C7D /* SkeletonPlaceHolderView.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
+				774389D92CFB4DF800143C7D /* RequestBuilder.swift in Sources */,
 				77DB74852CF5919B00693592 /* GetAlbumsUseCase.swift in Sources */,
 				774389BD2CF89D6F00143C7D /* ErrorView.swift in Sources */,
 				77DB74962CF6E00600693592 /* UserState.swift in Sources */,

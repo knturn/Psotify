@@ -18,7 +18,6 @@ struct GetUserProfileUseCase: GetUserProfileUseCaseProtocol {
   }
 
   func fetchUserInfo() async throws -> SpotifyUserProfile {
-
     guard let request = PsotifyEndpoint.userProfile.request else {
       throw SpotifyAuthError.invalidAuthCode
     }

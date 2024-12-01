@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HorizontalScrollableView: View {
   @EnvironmentObject var nav: Navigation
-   var model: HorizontalScrollViewUIModel?
+  private let model: HorizontalScrollViewUIModel?
 
   init(model: HorizontalScrollViewUIModel?) {
     self.model = model

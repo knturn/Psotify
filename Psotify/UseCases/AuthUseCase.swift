@@ -16,6 +16,7 @@ protocol AuthUseCaseProtocol {
 }
 
 final class AuthUseCase: AuthUseCaseProtocol {
+   static let shared: AuthUseCaseProtocol = AuthUseCase()
     private let networkService: NetworkServiceProtocol
     
     private let loginStatePublisher: CurrentValueSubject<UserLoginState, Never>
@@ -24,11 +25,11 @@ final class AuthUseCase: AuthUseCaseProtocol {
         loginStatePublisher.eraseToAnyPublisher()
     }
     
-    init(networkService: NetworkServiceProtocol, loginStatePublisher: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
+    init(networkService: NetworkServiceProtocol = NetworkService(), loginStatePublisher: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
         self.networkService = networkService
         self.loginStatePublisher = loginStatePublisher
     }
-    
+
     func logIn(with authCode: String) async throws {
         do {
             // 1. Save the authentication code

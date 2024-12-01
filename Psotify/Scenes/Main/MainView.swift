@@ -28,6 +28,7 @@ struct MainView: View {
             await viewModel.checkLoginState()
           }
       }
+
     }
   }
 }
