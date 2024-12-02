@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		772496002CFD94CF00211103 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772495FF2CFD94CF00211103 /* SearchView.swift */; };
+		772496022CFD94DB00211103 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772496012CFD94DB00211103 /* SearchViewModel.swift */; };
+		772496042CFDD20400211103 /* GetSearchResultUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772496032CFDD20400211103 /* GetSearchResultUseCase.swift */; };
+		772496062CFDD2B600211103 /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772496052CFDD2B600211103 /* SearchResponse.swift */; };
+		772496092CFDF59000211103 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772496082CFDF59000211103 /* SearchResultsView.swift */; };
+		7724960B2CFDF5D600211103 /* SearchErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7724960A2CFDF5D600211103 /* SearchErrorView.swift */; };
+		7724960D2CFDF5E100211103 /* SearchListViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7724960C2CFDF5E100211103 /* SearchListViews.swift */; };
 		774389BA2CF87F9800143C7D /* SkeletonPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389B92CF87F9800143C7D /* SkeletonPlaceHolderView.swift */; };
 		774389BD2CF89D6F00143C7D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389BC2CF89D6F00143C7D /* ErrorView.swift */; };
 		774389BF2CF8A28600143C7D /* ScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774389BE2CF8A28600143C7D /* ScreenState.swift */; };
@@ -93,6 +100,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		772495FF2CFD94CF00211103 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		772496012CFD94DB00211103 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		772496032CFDD20400211103 /* GetSearchResultUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSearchResultUseCase.swift; sourceTree = "<group>"; };
+		772496052CFDD2B600211103 /* SearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResponse.swift; sourceTree = "<group>"; };
+		772496082CFDF59000211103 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		7724960A2CFDF5D600211103 /* SearchErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchErrorView.swift; sourceTree = "<group>"; };
+		7724960C2CFDF5E100211103 /* SearchListViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListViews.swift; sourceTree = "<group>"; };
 		774389B92CF87F9800143C7D /* SkeletonPlaceHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonPlaceHolderView.swift; sourceTree = "<group>"; };
 		774389BC2CF89D6F00143C7D /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		774389BE2CF8A28600143C7D /* ScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenState.swift; sourceTree = "<group>"; };
@@ -192,6 +206,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		772495FE2CFD94BD00211103 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				772496072CFDF58100211103 /* Views */,
+				772495FF2CFD94CF00211103 /* SearchView.swift */,
+				772496012CFD94DB00211103 /* SearchViewModel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		772496072CFDF58100211103 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				772496082CFDF59000211103 /* SearchResultsView.swift */,
+				7724960A2CFDF5D600211103 /* SearchErrorView.swift */,
+				7724960C2CFDF5E100211103 /* SearchListViews.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		774389B82CF87F7E00143C7D /* SkeletonView */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +337,7 @@
 		777C612A2CE6F8CC0085EF2F /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				772495FE2CFD94BD00211103 /* Search */,
 				774389CC2CFA0E6F00143C7D /* PlayerView */,
 				774389C02CF8B01300143C7D /* AlbumDetailView */,
 				774389BB2CF89D6200143C7D /* ErrorView */,
@@ -384,6 +419,7 @@
 				77DB74A72CF8306E00693592 /* SubModels.swift */,
 				774389BE2CF8A28600143C7D /* ScreenState.swift */,
 				774389D12CFA148F00143C7D /* SongResponse.swift */,
+				772496052CFDD2B600211103 /* SearchResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -522,6 +558,7 @@
 				77DB74862CF591B700693592 /* GetUserProfileUseCase.swift */,
 				77DB749A2CF70E3C00693592 /* GetPlaylistsUseCase.swift */,
 				774389CF2CFA136400143C7D /* GetSongUseCase.swift */,
+				772496032CFDD20400211103 /* GetSearchResultUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -674,20 +711,25 @@
 				77EE44FC2CE741AC004A7EAD /* Launch.swift in Sources */,
 				777C613B2CE6FEBC0085EF2F /* NetworkService.swift in Sources */,
 				77DB749B2CF70E3C00693592 /* GetPlaylistsUseCase.swift in Sources */,
+				772496002CFD94CF00211103 /* SearchView.swift in Sources */,
 				774389C82CF9FBB700143C7D /* SectionGridViewUIModel.swift in Sources */,
 				77DB74832CF4A88600693592 /* HorizontalScrollView.swift in Sources */,
+				772496062CFDD2B600211103 /* SearchResponse.swift in Sources */,
 				774389DB2CFB5EF900143C7D /* RequestFactory.swift in Sources */,
 				774389C22CF8B02600143C7D /* AlbumDetailView.swift in Sources */,
 				77EE44FF2CE741CE004A7EAD /* LoginView.swift in Sources */,
 				774389D02CFA136400143C7D /* GetSongUseCase.swift in Sources */,
+				772496022CFD94DB00211103 /* SearchViewModel.swift in Sources */,
 				77EE450D2CE77DFA004A7EAD /* KeyChainService.swift in Sources */,
 				77DB74812CF4A82B00693592 /* SectionGridView.swift in Sources */,
 				77EE45142CE78309004A7EAD /* PsotifyTokenResponse.swift in Sources */,
 				77DB747B2CEFCDC600693592 /* HomeView.swift in Sources */,
 				777C61032CE6F4ED0085EF2F /* MainView.swift in Sources */,
 				77EE45082CE7613A004A7EAD /* LoginViewModel.swift in Sources */,
+				772496042CFDD20400211103 /* GetSearchResultUseCase.swift in Sources */,
 				774389CE2CFA0E8400143C7D /* PlayerManager.swift in Sources */,
 				77DB74772CEFC74000693592 /* HomeViewModel.swift in Sources */,
+				7724960B2CFDF5D600211103 /* SearchErrorView.swift in Sources */,
 				77EE45202CEB3456004A7EAD /* AuthUseCase.swift in Sources */,
 				77EE451D2CEB2979004A7EAD /* UserLoginState.swift in Sources */,
 				77DB749D2CF70EF600693592 /* UserPlaylistsResponse.swift in Sources */,
@@ -699,6 +741,7 @@
 				77DB74892CF5939700693592 /* UserProfileResponse.swift in Sources */,
 				774389BA2CF87F9800143C7D /* SkeletonPlaceHolderView.swift in Sources */,
 				777C61382CE6FC7D0085EF2F /* View+Extensions.swift in Sources */,
+				7724960D2CFDF5E100211103 /* SearchListViews.swift in Sources */,
 				774389D92CFB4DF800143C7D /* RequestBuilder.swift in Sources */,
 				77DB74852CF5919B00693592 /* GetAlbumsUseCase.swift in Sources */,
 				774389BD2CF89D6F00143C7D /* ErrorView.swift in Sources */,
@@ -715,6 +758,7 @@
 				77EE45242CECA229004A7EAD /* ConfigurationProtocol.swift in Sources */,
 				77EE45122CE77F3B004A7EAD /* Data+Extensions.swift in Sources */,
 				77DB74872CF591B700693592 /* GetUserProfileUseCase.swift in Sources */,
+				772496092CFDF59000211103 /* SearchResultsView.swift in Sources */,
 				777C61302CE6F9890085EF2F /* Navigation.swift in Sources */,
 				777C61352CE6FB770085EF2F /* MainViewModel.swift in Sources */,
 			);

@@ -18,6 +18,7 @@ struct Tracks: Codable {
 }
 
 struct TrackItem: Codable {
+    let album: AlbumItem?
     let artists: [Artist]?
     let availableMarkets: [String]?
     let discNumber: Int?
@@ -37,7 +38,7 @@ struct TrackItem: Codable {
     let isLocal: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case artists, name, href, id, type, uri
+        case album, artists, name, href, id, type, uri
         case availableMarkets = "available_markets"
         case discNumber = "disc_number"
         case durationMS = "duration_ms"

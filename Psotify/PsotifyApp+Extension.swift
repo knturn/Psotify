@@ -35,5 +35,9 @@ extension PsotifyApp {
       GetPlaylistsUseCase(networkService: netwokService)
     }
 
+    diContainer.bind(service: GetSearchResultProtocol.self) { searchResultUseCase in
+      GetSearchResultUseCase(networkService: netwokService)
+    }
+
   }
 }
