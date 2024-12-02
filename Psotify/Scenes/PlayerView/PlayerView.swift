@@ -61,23 +61,27 @@ private extension PlayerView {
     }
 
     var albumArtView: some View {
-      AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { image in
-            image
-                .resizable()
-                .scaledToFit()
-        } placeholder: {
-            Image(.placeHolder)
-                .resizable()
-                .scaledToFit()
+      AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { phase in
+        if let image = phase.image {
+          image
+            .resizable()
+            .scaledToFit()
+            .cornerRadius(8)
+        } else if phase.error != nil {
+          Image(.placeHolder)
+            .resizable()
+            .scaledToFit()
+            .cornerRadius(8)
+        } else {
+          ProgressView()
         }
-        .aspectRatio(contentMode: .fit)
-        .padding(.horizontal, 55)
-        .clipShape(.circle)
-        .padding(8)
-        .background(.black)
+      }
+        .frame(width: 300, height: 300)
         .clipShape(.circle)
         .shadow(color: Color.green.opacity(0.3), radius: 10, x: 5, y: 5)
         .padding(.top, 35)
+        .background(Color.black.ignoresSafeArea())
+        .clipShape(.circle)
     }
 
     var songDetailsView: some View {
