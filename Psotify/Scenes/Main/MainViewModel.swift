@@ -32,14 +32,8 @@ final class MainViewModel: ObservableObject {
   func checkLoginState() async {
     do {
       try await authUseCase.checkLoginState()
-      DispatchQueue.main.async { [weak self] in
-        self?.loginState = .login
-      }
     } catch {
       print(error.localizedDescription)
-      DispatchQueue.main.async { [weak self] in
-        self?.loginState = .logout
-      }
     }
   }
 }

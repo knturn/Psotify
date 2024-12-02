@@ -65,29 +65,41 @@ final class AuthUseCase: AuthUseCaseProtocol {
         }
     }
     
-    func checkLoginState() async throws {
-        do {
-            guard !self.isTokenExpired() else {
-              do {
-                try await refreshToken()
-                 loginStatePublisher.send(.login)
-              } catch {
-                loginStatePublisher.send(.logout)
-              }
-                return
-            }
-          if KeyChainService.get(key: KeychainServiceKeys.authCode.rawValue) != nil {
-                try await fetchToken()
-                loginStatePublisher.send(.login)
-            } else {
-                loginStatePublisher.send(.logout)
-            }
-        } catch {
-            loginStatePublisher.send(.logout)
-            throw error
-        }
-    }
+  func checkLoginState() async throws {
+      do {
+          if isTokenExpired() {
+              try await handleTokenRefresh()
+              return
+          }
+
+          if hasValidAuthCodeAndToken() {
+              try await fetchToken()
+              loginStatePublisher.send(.login)
+          } else {
+              loginStatePublisher.send(.logout)
+          }
+      } catch {
+        loginStatePublisher.send(.logout)
+          throw error
+      }
+  }
+
+  private func handleTokenRefresh() async throws {
+      do {
+          try await refreshToken()
+          loginStatePublisher.send(.login)
+      } catch {
+          loginStatePublisher.send(.logout)
+      }
+  }
+
+  private func hasValidAuthCodeAndToken() -> Bool {
+      let hasAuthCode = KeyChainService.get(key: KeychainServiceKeys.authCode.rawValue) != nil
+      let hasTokenModel = getTokenModel() != nil
+      return hasAuthCode && hasTokenModel
+  }
 }
+
 
 // MARK: - Private Methods
 extension AuthUseCase {

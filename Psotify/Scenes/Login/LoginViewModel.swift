@@ -28,7 +28,6 @@ extension LoginViewModel {
         } catch {
             print(error)
         }
-       
     }
     
     private func extractCode(from url: URL) -> String? {
