@@ -10,7 +10,7 @@ import SwiftUI
 struct LaunchView: View {
     
     var body: some View {
-        Images.launchScreen.image
+        Image(.launchScreen)
             .resizable()
             .scaledToFill()
             .frame(maxWidth: .infinity, maxHeight: .infinity)

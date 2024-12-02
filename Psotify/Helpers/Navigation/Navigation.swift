@@ -44,8 +44,9 @@ class Navigation: ObservableObject {
   }
 
   enum ViewType: Hashable {
-    case albumDetail(id: String)
+    case albumDetail(with: AlbumDetailViewModel)
     case userDetail(with: SpotifyUserProfile?)
+    case playerView(with: PlayerViewModel)
     case searchDetail(id: String)
     case libraryDetail(id: String)
   }
@@ -56,8 +57,10 @@ extension Navigation.ViewType {
     switch self {
     case .userDetail(with: let model):
       ProfileView(viewModel: .init(userModel: model))
-    case .albumDetail(id: let id):
-      Text("Albüm List \(id)")
+    case .albumDetail(with: let model):
+         AlbumDetailView(viewModel: model)
+    case .playerView(with: let viewModel):
+      PlayerView(viewModel: viewModel)
     case .searchDetail(_):
       Text("Search Detail")
     case .libraryDetail(_):

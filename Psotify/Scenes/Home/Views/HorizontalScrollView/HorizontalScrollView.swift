@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HorizontalScrollableView: View {
   @EnvironmentObject var nav: Navigation
-   var model: HorizontalScrollViewUIModel?
+  private let model: HorizontalScrollViewUIModel?
 
   init(model: HorizontalScrollViewUIModel?) {
     self.model = model
@@ -49,7 +49,8 @@ struct HorizontalScrollableView: View {
               }
               .onTapGesture {
                 if let trackId = track.track?.id {
-                  nav.navigate(to: .albumDetail(id: trackId))
+                  let viewModel = PlayerViewModel(id: trackId)
+                  nav.navigate(to: .playerView(with: viewModel))
                 }
               }
             }

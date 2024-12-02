@@ -7,11 +7,10 @@
 
 import Foundation
 
-
 final class LoginViewModel: ObservableObject {
     private let authUseCase: AuthUseCaseProtocol
     
-    init(authUseCase: AuthUseCaseProtocol) {
+    init(authUseCase: AuthUseCaseProtocol = AppDIContainer.shared.resolve(AuthUseCaseProtocol.self)) {
         self.authUseCase = authUseCase
     }
 }
@@ -29,7 +28,6 @@ extension LoginViewModel {
         } catch {
             print(error)
         }
-       
     }
     
     private func extractCode(from url: URL) -> String? {

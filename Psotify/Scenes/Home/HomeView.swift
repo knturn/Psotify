@@ -11,7 +11,7 @@ struct HomeView: View {
     @EnvironmentObject var nav: Navigation
     @StateObject private var viewModel: HomeViewModel
 
-    init(viewModel: HomeViewModel) {
+  init(viewModel: HomeViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -81,11 +81,10 @@ struct HomeView: View {
     private var contentView: some View {
         LazyVStack(spacing: 32) {
             SectionView(
-                title: "HOT Albums",
-                gridItems: viewModel.newReleases
+              sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
             )
             ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
-                HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
+              HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
                     .onAppear {
                         Task {
                             await viewModel.fetchPlaylist(for: item.id)

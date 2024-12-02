@@ -11,7 +11,7 @@ struct LoginView: View {
     @State private var showWebView = false
     @StateObject private var viewModel: LoginViewModel
     
-    init(showWebView: Bool = false, viewModel: LoginViewModel) {
+  init(showWebView: Bool = false, viewModel: LoginViewModel = .init()) {
         self.showWebView = showWebView
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -33,7 +33,7 @@ struct LoginView: View {
             webViewContent
         } else {
             VStack{
-                Images.loginLogo.image
+                Image(.loginLogo)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.8,
