@@ -25,7 +25,7 @@ struct TabBarView: View {
         }
         .tag(Navigation.TabItem.home)
 
-      Text("Search TAB")
+      SearchView()
         .setNavPath($nav.searchPath)
         .tabItem {
           Label("Search", systemImage: "magnifyingglass")

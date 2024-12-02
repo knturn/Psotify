@@ -89,6 +89,11 @@ class PsotifyRequestFactory {
           guard let url = Configuration.apiBaseURL?.appendingPathComponent("tracks/\(id)") else { return nil }
           builder = RequestBuilder(url: url, httpMethod: .GET)
               .setHeaders([EndPointConstants.authorization: getBearerHeader()])
+        case .search(query: let query):
+            guard let url = Configuration.apiBaseURL?.appendingPathComponent("search") else { return nil }
+            builder = RequestBuilder(url: url, httpMethod: .GET)
+                .setHeaders([EndPointConstants.authorization: getBearerHeader()])
+                .setQueryParameters(constructParams(for: endpoint))
         }
 
         return builder.build()
@@ -108,6 +113,12 @@ class PsotifyRequestFactory {
         case .newReleases(let limit):
             return [
                 URLQueryItem(name: "limit", value: limit)
+            ]
+        case .search(let query, let types):
+            let typesString = types.joined(separator: ",")
+            return [
+                  URLQueryItem(name: "q", value: query),
+                  URLQueryItem(name: "type", value: typesString)
             ]
         default:
             return []
