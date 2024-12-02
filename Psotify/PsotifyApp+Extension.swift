@@ -18,7 +18,7 @@ extension PsotifyApp {
     let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
 
     diContainer.bind(service: AuthUseCaseProtocol.self) { authUseCase in
-      return AuthUseCase(networkService: netwokService)
+      AuthUseCase(networkService: netwokService)
     }
 
     diContainer.bind(service: GetSongUseCaseProtocol.self) { songUseCase in

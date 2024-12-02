@@ -11,7 +11,6 @@ class HomeViewModel: ObservableObject {
   private let getUserProfileUseCase: GetUserProfileUseCaseProtocol
   private let getAlbumsUseCase: GetAlbumsUseCaseProtocol
   private let getPlaylistUseCase: GetPlaylistsUseCaseProtocol
-  private let getSongUseCase: GetSongUseCaseProtocol
 
   @Published var newReleases: [AlbumItem]?
   @Published var userModel: SpotifyUserProfile?
@@ -21,12 +20,10 @@ class HomeViewModel: ObservableObject {
 
   init(getUserProfileUseCase: GetUserProfileUseCaseProtocol = AppDIContainer.shared.resolve(GetUserProfileUseCaseProtocol.self),
        getAlbumsUseCase: GetAlbumsUseCaseProtocol = AppDIContainer.shared.resolve(GetAlbumsUseCaseProtocol.self),
-       getPlaylistUseCase: GetPlaylistsUseCaseProtocol = AppDIContainer.shared.resolve(GetPlaylistsUseCaseProtocol.self),
-       getSongUseCase: GetSongUseCaseProtocol = AppDIContainer.shared.resolve(GetSongUseCaseProtocol.self)) {
+       getPlaylistUseCase: GetPlaylistsUseCaseProtocol = AppDIContainer.shared.resolve(GetPlaylistsUseCaseProtocol.self)) {
     self.getUserProfileUseCase = getUserProfileUseCase
     self.getAlbumsUseCase = getAlbumsUseCase
     self.getPlaylistUseCase = getPlaylistUseCase
-    self.getSongUseCase = getSongUseCase
   }
 
   func fetchUserProfile() async {
