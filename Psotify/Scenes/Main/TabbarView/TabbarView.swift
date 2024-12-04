@@ -32,7 +32,7 @@ struct TabBarView: View {
         }
         .tag(Navigation.TabItem.search)
 
-      Text("Library TAB")
+      LibraryView()
         .setNavPath($nav.libraryPath)
         .tabItem {
           Label("Your Library", systemImage: "books.vertical.fill")

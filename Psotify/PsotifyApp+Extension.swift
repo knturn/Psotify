@@ -38,5 +38,9 @@ extension PsotifyApp {
     diContainer.bind(service: GetSearchResultProtocol.self, .transient) { searchResultUseCase in
       GetSearchResultUseCase(networkService: netwokService)
     }
+
+    diContainer.bind(service: GetUserTopTracksUseCaseProtocol.self, .transient) { getUserTopTracksUseCase in
+      GetUserTopTracksUseCase(networkService: netwokService)
+    }
   }
 }
