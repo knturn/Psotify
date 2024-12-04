@@ -24,9 +24,9 @@ struct ProfileView: View {
                 case .loaded:
                     loadedView
                 case .error(let message):
-                   ErrorView(message: message)
+                    ErrorView(message: message)
                 default:
-                  ErrorView(message: "Kullanıcı bilgileri alınamadı")
+                    ErrorView(message: "Kullanıcı bilgileri alınamadı")
                 }
             }
             .padding()
@@ -44,7 +44,6 @@ struct ProfileView: View {
         }
     }
 }
-
 
 struct ProfileHeader: View {
     var userModel: SpotifyUserProfile?

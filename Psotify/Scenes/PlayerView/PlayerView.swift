@@ -19,13 +19,9 @@ struct PlayerView: View {
     var body: some View {
         VStack {
             headerView
-
             albumArtView
-
             songDetailsView
-
             progressView
-
             controlButtons
 
             Spacer()
@@ -33,13 +29,13 @@ struct PlayerView: View {
         .frame(maxWidth: .infinity, maxHeight: .leastNormalMagnitude)
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .task {
-            await viewModel.fetchSong()
+            viewModel.fetchSong()
         }
-        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
-            viewModel.updateCurrentTime()
+        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { [weak viewModel] _ in
+            viewModel?.updateCurrentTime()
         }
-        .onDisappear {
-            playerManager.close()
+        .onDisappear { [weak playerManager] in
+            playerManager?.close()
         }
     }
 }
@@ -61,21 +57,21 @@ private extension PlayerView {
     }
 
     var albumArtView: some View {
-      AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { phase in
-        if let image = phase.image {
-          image
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(8)
-        } else if phase.error != nil {
-          Image(.placeHolder)
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(8)
-        } else {
-          ProgressView()
+        AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(8)
+            } else if phase.error != nil {
+                Image(.placeHolder)
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(8)
+            } else {
+                ProgressView()
+            }
         }
-      }
         .frame(width: 300, height: 300)
         .clipShape(.circle)
         .shadow(color: Color.green.opacity(0.3), radius: 10, x: 5, y: 5)
@@ -111,15 +107,14 @@ private extension PlayerView {
 
             Slider(value: Binding(get: {
                 viewModel.currentTime
-            }, set: { newValue in
-                playerManager.setCurrentTime(time: newValue)
+            }, set: { [weak playerManager] newValue in
+                playerManager?.setCurrentTime(time: newValue)
             }), in: 0...viewModel.totalTime)
             .accentColor(.spotifyGreen)
             .padding([.top, .horizontal], 20)
         }
     }
 
-    // MARK: - Control Buttons
     var controlButtons: some View {
         HStack(spacing: 20) {
             ModifiedButtonView(image: "backward.fill")

@@ -11,7 +11,7 @@ struct HomeView: View {
     @EnvironmentObject var nav: Navigation
     @StateObject private var viewModel: HomeViewModel
 
-  init(viewModel: HomeViewModel = .init()) {
+    init(viewModel: HomeViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -29,14 +29,12 @@ struct HomeView: View {
                     contentView
                         .padding(.horizontal)
                 case .error(let message):
-                   ErrorView(message: message)
+                    ErrorView(message: message)
                 }
             }
         }
         .task {
-            await viewModel.fetchNewReleases()
-            await viewModel.fetchUserPlaylists()
-            await viewModel.fetchUserProfile()
+            viewModel.fetch()
         }
         .background(.spotifyMediumGray)
     }
@@ -60,35 +58,33 @@ struct HomeView: View {
         }
     }
 
-  private var placeholder: some View {
-    SkeletonPlaceHolderView() {
-        VStack(spacing: 8) {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 120)
+    private var placeholder: some View {
+        SkeletonPlaceHolderView() {
+            VStack(spacing: 8) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 120)
 
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 16)
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 16)
 
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Color.gray.opacity(0.3))
-                .frame(width: 80, height: 16)
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 80, height: 16)
+            }
         }
     }
-  }
 
     private var contentView: some View {
         LazyVStack(spacing: 32) {
             SectionView(
-              sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
+                sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
             )
             ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
-              HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
+                HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
                     .onAppear {
-                        Task {
-                            await viewModel.fetchPlaylist(for: item.id)
-                        }
+                        viewModel.fetchPlaylist(for: item.id)
                     }
             }
         }
