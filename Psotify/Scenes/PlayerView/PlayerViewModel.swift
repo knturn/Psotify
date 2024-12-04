@@ -22,17 +22,20 @@ class PlayerViewModel: ObservableObject {
         self.playerManager = playerManager
     }
 
-    func fetchSong() async {
-        do {
-            let songModel = try await getSongUseCase.fetchSong(with: self.id)
-            DispatchQueue.main.async { [weak self] in
-                self?.song = songModel
-                self?.setupAudio()
-            }
-        } catch {
-            print("Şarkı bilgilerine erişilemedi")
-        }
+  func fetchSong() {
+    Task { [weak self] in
+      guard let self else { return }
+      do {
+          let songModel = try await getSongUseCase.fetchSong(with: id)
+          DispatchQueue.main.async {
+              self.song = songModel
+              self.setupAudio()
+          }
+      } catch {
+          print("Şarkı bilgilerine erişilemedi")
+      }
     }
+  }
 
     func setupAudio() {
         if let urlStr = song?.previewURL {
@@ -40,12 +43,14 @@ class PlayerViewModel: ObservableObject {
         } else if let url = Bundle.main.url(forResource: "piano", withExtension: "mp3") {
             playerManager.setContentOf(urlStr: url.absoluteString)
         }
-        playerManager.prepareToPlay()
         totalTime = playerManager.getTotalTime()
     }
 
     func updateCurrentTime() {
-        currentTime = playerManager.getCurrentTime()
+      DispatchQueue.main.async { [weak self] in
+        guard let self else { return }
+        self.currentTime = playerManager.getCurrentTime()
+      }
     }
 
     func timeString(for time: TimeInterval) -> String {

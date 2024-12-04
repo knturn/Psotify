@@ -34,9 +34,7 @@ struct HomeView: View {
             }
         }
         .task {
-            await viewModel.fetchNewReleases()
-            await viewModel.fetchUserPlaylists()
-            await viewModel.fetchUserProfile()
+            viewModel.fetch()
         }
         .background(.spotifyMediumGray)
     }
@@ -86,9 +84,7 @@ struct HomeView: View {
             ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
               HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
                     .onAppear {
-                        Task {
-                            await viewModel.fetchPlaylist(for: item.id)
-                        }
+                        viewModel.fetchPlaylist(for: item.id)
                     }
             }
         }

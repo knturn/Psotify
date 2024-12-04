@@ -29,8 +29,8 @@ class PlayerManager: ObservableObject {
 
     func close() {
       player?.pause()
-      player = nil
       isPlaying = false
+      player = nil
     }
 
   func setContentOf(urlStr: String) {
@@ -40,11 +40,7 @@ class PlayerManager: ObservableObject {
     }
     player = try? AVAudioPlayer(contentsOf: songURL)
   }
-
-  func prepareToPlay() {
-    player?.prepareToPlay()
-  }
-
+  
   func getTotalTime() -> TimeInterval {
     player?.duration ?? 0.0
   }

@@ -19,27 +19,23 @@ struct PlayerView: View {
     var body: some View {
         VStack {
             headerView
-
             albumArtView
-
             songDetailsView
-
             progressView
-
             controlButtons
-
+          
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .leastNormalMagnitude)
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .task {
-            await viewModel.fetchSong()
+          viewModel.fetchSong()
         }
-        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
-            viewModel.updateCurrentTime()
+        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { [weak viewModel] _ in
+          viewModel?.updateCurrentTime()
         }
-        .onDisappear {
-            playerManager.close()
+        .onDisappear { [weak playerManager] in
+          playerManager?.close()
         }
     }
 }
@@ -111,8 +107,8 @@ private extension PlayerView {
 
             Slider(value: Binding(get: {
                 viewModel.currentTime
-            }, set: { newValue in
-                playerManager.setCurrentTime(time: newValue)
+            }, set: { [weak playerManager] newValue in
+                playerManager?.setCurrentTime(time: newValue)
             }), in: 0...viewModel.totalTime)
             .accentColor(.spotifyGreen)
             .padding([.top, .horizontal], 20)
