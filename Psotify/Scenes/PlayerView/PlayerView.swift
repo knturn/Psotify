@@ -23,19 +23,19 @@ struct PlayerView: View {
             songDetailsView
             progressView
             controlButtons
-          
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .leastNormalMagnitude)
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .task {
-          viewModel.fetchSong()
+            viewModel.fetchSong()
         }
         .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { [weak viewModel] _ in
-          viewModel?.updateCurrentTime()
+            viewModel?.updateCurrentTime()
         }
         .onDisappear { [weak playerManager] in
-          playerManager?.close()
+            playerManager?.close()
         }
     }
 }
@@ -57,21 +57,21 @@ private extension PlayerView {
     }
 
     var albumArtView: some View {
-      AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { phase in
-        if let image = phase.image {
-          image
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(8)
-        } else if phase.error != nil {
-          Image(.placeHolder)
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(8)
-        } else {
-          ProgressView()
+        AsyncImage(url: viewModel.song?.album?.images?.first?.imageURL) { phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(8)
+            } else if phase.error != nil {
+                Image(.placeHolder)
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(8)
+            } else {
+                ProgressView()
+            }
         }
-      }
         .frame(width: 300, height: 300)
         .clipShape(.circle)
         .shadow(color: Color.green.opacity(0.3), radius: 10, x: 5, y: 5)
@@ -115,7 +115,6 @@ private extension PlayerView {
         }
     }
 
-    // MARK: - Control Buttons
     var controlButtons: some View {
         HStack(spacing: 20) {
             ModifiedButtonView(image: "backward.fill")

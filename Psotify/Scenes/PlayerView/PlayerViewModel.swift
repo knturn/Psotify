@@ -16,26 +16,29 @@ class PlayerViewModel: ObservableObject {
     @Published var totalTime: TimeInterval = 0.0
     @Published var currentTime: TimeInterval = 0.0
 
-  init(getSongUseCase: GetSongUseCaseProtocol = AppDIContainer.shared.resolve(GetSongUseCaseProtocol.self), id: String, playerManager: PlayerManager = .shared) {
+    init(
+        getSongUseCase: GetSongUseCaseProtocol = AppDIContainer.shared.resolve(GetSongUseCaseProtocol.self),
+        id: String,
+        playerManager: PlayerManager = .shared
+    ) {
         self.getSongUseCase = getSongUseCase
         self.id = id
         self.playerManager = playerManager
     }
 
-  func fetchSong() {
-    Task { [weak self] in
-      guard let self else { return }
-      do {
-          let songModel = try await getSongUseCase.fetchSong(with: id)
-          DispatchQueue.main.async {
-              self.song = songModel
-              self.setupAudio()
-          }
-      } catch {
-          print("Şarkı bilgilerine erişilemedi")
-      }
+  @MainActor
+    func fetchSong() {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let songModel = try await getSongUseCase.fetchSong(with: id)
+                  self.song = songModel
+                  self.setupAudio()
+            } catch {
+                print("Şarkı bilgilerine erişilemedi")
+            }
+        }
     }
-  }
 
     func setupAudio() {
         if let urlStr = song?.previewURL {
@@ -45,12 +48,10 @@ class PlayerViewModel: ObservableObject {
         }
         totalTime = playerManager.getTotalTime()
     }
-
+  
+  @MainActor
     func updateCurrentTime() {
-      DispatchQueue.main.async { [weak self] in
-        guard let self else { return }
-        self.currentTime = playerManager.getCurrentTime()
-      }
+      self.currentTime = playerManager.getCurrentTime()
     }
 
     func timeString(for time: TimeInterval) -> String {
@@ -60,13 +61,13 @@ class PlayerViewModel: ObservableObject {
     }
 }
 
-//MARK: For navigation process
+// MARK: For navigation process
 extension PlayerViewModel: Equatable, Hashable {
-  static func == (lhs: PlayerViewModel, rhs: PlayerViewModel) -> Bool {
-    lhs.id == rhs.id
-  }
+    static func == (lhs: PlayerViewModel, rhs: PlayerViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
 
-  func hash(into hasher: inout Hasher) {
-         hasher.combine(id)
-     }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
