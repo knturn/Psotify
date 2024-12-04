@@ -11,33 +11,32 @@ extension PsotifyApp {
   // Service Dependency Injection with DI container
 
   func setupDIContainer(with diContainer: AppDIContainerProtocol){
-    diContainer.bind(service: NetworkServiceProtocol.self) { networkService in
+    diContainer.bind(service: NetworkServiceProtocol.self, .transient) { networkService in
       NetworkService()
     }
 
     let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
 
-    diContainer.bind(service: AuthUseCaseProtocol.self) { authUseCase in
+    diContainer.bind(service: AuthUseCaseProtocol.self, .singleton) { authUseCase in
       AuthUseCase(networkService: netwokService)
     }
 
-    diContainer.bind(service: GetSongUseCaseProtocol.self) { songUseCase in
+    diContainer.bind(service: GetSongUseCaseProtocol.self, .transient) { songUseCase in
       GetSongUseCase(networkService: netwokService)
     }
-    diContainer.bind(service: GetUserProfileUseCaseProtocol.self) { profileUseCase in
+    diContainer.bind(service: GetUserProfileUseCaseProtocol.self, .transient) { profileUseCase in
       GetUserProfileUseCase(networkService: netwokService)
     }
-    diContainer.bind(service: GetAlbumsUseCaseProtocol.self) { albumUseCase in
+    diContainer.bind(service: GetAlbumsUseCaseProtocol.self, .transient) { albumUseCase in
       GetAlbumsUseCase(networkService: netwokService)
     }
 
-    diContainer.bind(service: GetPlaylistsUseCaseProtocol.self) { playlistUseCase in
+    diContainer.bind(service: GetPlaylistsUseCaseProtocol.self, .transient) { playlistUseCase in
       GetPlaylistsUseCase(networkService: netwokService)
     }
 
-    diContainer.bind(service: GetSearchResultProtocol.self) { searchResultUseCase in
+    diContainer.bind(service: GetSearchResultProtocol.self, .transient) { searchResultUseCase in
       GetSearchResultUseCase(networkService: netwokService)
     }
-
   }
 }
