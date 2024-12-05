@@ -239,11 +239,19 @@
 		772496202D00F2AB00211103 /* LibraryView */ = {
 			isa = PBXGroup;
 			children = (
+				772496232D015EE700211103 /* Views */,
 				772496132CFF36AE00211103 /* LibraryView.swift */,
 				772496152CFF36E900211103 /* LibraryViewModel.swift */,
-				772496212D00F2C300211103 /* TrackView.swift */,
 			);
 			path = LibraryView;
+			sourceTree = "<group>";
+		};
+		772496232D015EE700211103 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				772496212D00F2C300211103 /* TrackView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		774389B82CF87F7E00143C7D /* SkeletonView */ = {

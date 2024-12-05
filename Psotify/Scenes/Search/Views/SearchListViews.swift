@@ -27,9 +27,11 @@ struct SearchListSectionView<Content: View>: View {
 }
 
 struct SearchListCellView: View {
+  @EnvironmentObject var nav: Navigation
   let imageURL: URL?
   let title: String
   let subtitle: String
+  let detailViewType: Navigation.ViewType
 
   var body: some View {
     HStack {
@@ -66,6 +68,9 @@ struct SearchListCellView: View {
       .padding(.leading, 8)
 
       Spacer()
+    }
+    .onTapGesture {
+      nav.navigate(to: detailViewType)
     }
     .padding(.vertical, 5)
     .background(Color.black)

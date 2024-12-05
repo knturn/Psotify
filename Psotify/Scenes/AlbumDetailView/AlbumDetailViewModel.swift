@@ -33,7 +33,6 @@ class AlbumDetailViewModel: ObservableObject {
           }
       }
   }
-
 }
 
 //MARK: For navigation process
