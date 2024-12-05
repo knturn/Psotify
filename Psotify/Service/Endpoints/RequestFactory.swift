@@ -18,7 +18,7 @@ private enum EndPointConstants {
     static let responseType = "response_type"
     static let clientID = "client_id"
     static let scope = "scope"
-    static let scopeValue = "user-read-private user-read-email"
+    static let scopeValue = "user-read-private user-read-email user-library-read"
     static let authState = "TRUE"
     static let state = "state"
     static let showDialog = "show_dialog"
@@ -34,7 +34,6 @@ class PsotifyRequestFactory {
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setQueryParameters(constructParams(for: endpoint))
                 .setHeaders([EndPointConstants.contentType: EndPointConstants.urlEncoded])
-
         case .token(let code):
             guard let url = Configuration.authBaseURL?.appendingPathComponent("api/token") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .POST)
@@ -47,7 +46,6 @@ class PsotifyRequestFactory {
                     EndPointConstants.contentType: EndPointConstants.urlEncoded,
                     EndPointConstants.authorization: Configuration.authorization
                 ])
-
         case .refreshToken(let refreshToken):
             guard let url = Configuration.authBaseURL?.appendingPathComponent("api/token") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .POST)
@@ -59,28 +57,23 @@ class PsotifyRequestFactory {
                     EndPointConstants.contentType: EndPointConstants.urlEncoded,
                     EndPointConstants.authorization: Configuration.authorization
                 ])
-
         case .newReleases:
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("browse/new-releases") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setQueryParameters(constructParams(for: endpoint))
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-
         case .album(let id):
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("albums/\(id)") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-
         case .userProfile:
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("me") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-
         case .playlist(let id):
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("playlists/\(id)") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-
         case .userPlaylists:
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("me/playlists") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
@@ -89,7 +82,11 @@ class PsotifyRequestFactory {
           guard let url = Configuration.apiBaseURL?.appendingPathComponent("tracks/\(id)") else { return nil }
           builder = RequestBuilder(url: url, httpMethod: .GET)
               .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-        case .search(query: let query):
+        case .userTopTracks:
+          guard let url = Configuration.apiBaseURL?.appendingPathComponent("me/tracks") else { return nil }
+          builder = RequestBuilder(url: url, httpMethod: .GET)
+              .setHeaders([EndPointConstants.authorization: getBearerHeader()])
+        case .search:
             guard let url = Configuration.apiBaseURL?.appendingPathComponent("search") else { return nil }
             builder = RequestBuilder(url: url, httpMethod: .GET)
                 .setHeaders([EndPointConstants.authorization: getBearerHeader()])
