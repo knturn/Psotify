@@ -26,7 +26,7 @@ struct TrackItem: Codable {
     let explicit: Bool?
     let externalUrls: ExternalURLs
     let href: String?
-    let id: String?
+    let id: String
     let isPlayable: Bool?
     let linkedFrom: LinkedFrom?
     let restrictions: AlbumRestrictions?

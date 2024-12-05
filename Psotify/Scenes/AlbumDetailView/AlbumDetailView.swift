@@ -59,10 +59,8 @@ struct AlbumDetailView: View {
             List(viewModel.songList?.tracks?.items ?? [], id: \.id) { track in
                 trackRow(for: track)
                     .onTapGesture {
-                        if let id = track.id {
-                            let viewModel: PlayerViewModel = .init(id: id)
-                            nav.navigate(to: .playerView(with: viewModel))
-                        }
+                      let viewModel: PlayerViewModel = .init(id: track.id)
+                      nav.navigate(to: .playerView(with: viewModel))
                     }
             }
             .listStyle(.plain)

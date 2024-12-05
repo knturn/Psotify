@@ -31,7 +31,7 @@ struct SearchView: View {
                 ResultsView(
                     searchedSongs: viewModel.searchedSongs,
                     searchedAlbums: viewModel.searchedAlbums,
-                    showLabel: !viewModel.query.isEmpty
+                    showLabel: viewModel.showCouldntFileLabel
                 )
 
             case .error(let errorMessage):
@@ -50,22 +50,27 @@ struct SearchView: View {
   private var searchBar: some View {
       HStack {
           TextField("Search for songs or albums", text: $viewModel.query)
+              .textFieldStyle(.plain)
               .padding()
-              .background(Color(.darkGray))
+              .background(.spotifyXLightGray)
               .cornerRadius(10)
               .foregroundColor(.white)
               .accentColor(.spotifyGreen)
 
           if !viewModel.query.isEmpty {
-              Button(action: {
-                  viewModel.query = ""
-              }) {
-                  Image(systemName: "xmark.circle.fill")
-                      .foregroundColor(.gray)
-                      .padding(8)
-              }
+            clearButton
           }
       }
       .padding(.horizontal)
+  }
+
+  private var clearButton: some View {
+    Button(action: {
+        viewModel.query = ""
+    }) {
+        Image(systemName: "xmark.circle.fill")
+            .foregroundColor(.gray)
+            .padding(8)
+    }
   }
 }

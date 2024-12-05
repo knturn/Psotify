@@ -38,7 +38,8 @@ struct ResultsView: View {
                 SearchListCellView(
                   imageURL: $0.album?.images.first?.imageURL,
                   title: $0.name ?? "Unknown Song",
-                  subtitle: $0.artists?.first?.name ?? "Unknown Artist"
+                  subtitle: $0.artists?.first?.name ?? "Unknown Artist",
+                  detailViewType: .playerView(with: .init(id: $0.id))
                 )
               }
             )
@@ -51,7 +52,8 @@ struct ResultsView: View {
                 SearchListCellView(
                   imageURL: $0.images.first?.imageURL,
                   title: $0.name,
-                  subtitle: $0.artists.first?.name ?? "Unknown Artist"
+                  subtitle: $0.artists.first?.name ?? "Unknown Artist",
+                  detailViewType: .albumDetail(with: .init(id: $0.id))
                 )
               }
             )

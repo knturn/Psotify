@@ -47,8 +47,6 @@ class Navigation: ObservableObject {
     case albumDetail(with: AlbumDetailViewModel)
     case userDetail(with: SpotifyUserProfile?)
     case playerView(with: PlayerViewModel)
-    case searchDetail(id: String)
-    case libraryDetail(id: String)
   }
 }
 
@@ -61,10 +59,6 @@ extension Navigation.ViewType {
          AlbumDetailView(viewModel: model)
     case .playerView(with: let viewModel):
       PlayerView(viewModel: viewModel)
-    case .searchDetail(_):
-      Text("Search Detail")
-    case .libraryDetail(_):
-      Text("Library Detail")
     }
   }
 }

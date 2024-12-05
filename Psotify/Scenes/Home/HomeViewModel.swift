@@ -34,53 +34,46 @@ final class HomeViewModel: ObservableObject {
             await self.fetchUserPlaylists()
         }
     }
-
+@MainActor
     private func fetchUserProfile() async {
         do {
             let userModel = try await getUserProfileUseCase.fetchUserInfo()
-            updateOnMain {
                 self.userModel = userModel
                 self.updateScreenStateIfNeeded()
-            }
         } catch {
-            handleFetchError("Kullanıcı bilgileri alınırken hata oluştu.")
+          self.screenState = .error("Kullanıcı bilgileri alınırken hata oluştu.")
+
         }
     }
-
+@MainActor
     private func fetchNewReleases() async {
         do {
             let albums = try await getAlbumsUseCase.fetchNewReleases(limit: 6)
-            updateOnMain {
                 self.newReleases = albums.items
                 self.updateScreenStateIfNeeded()
-            }
         } catch {
-            handleFetchError("Yeni albümler alınırken hata oluştu.")
+          self.screenState = .error("Yeni albümler alınırken hata oluştu.")
         }
     }
-
+@MainActor
     private func fetchUserPlaylists() async {
         do {
             let playlists = try await getPlaylistUseCase.fetchUserPlaylist()
-            updateOnMain {
                 self.featuredPlayList = playlists
                 self.updateScreenStateIfNeeded()
-            }
         } catch {
-            handleFetchError("Çalma listeleri alınırken hata oluştu.")
+          self.screenState = .error("Çalma listeleri alınırken hata oluştu.")
         }
     }
-
+@MainActor
     func fetchPlaylist(for id: String) {
         Task { [weak self] in
             guard let self else { return }
             do {
                 let playlist = try await getPlaylistUseCase.fetchPlaylist(with: id)
-                updateOnMain {
                     self.playlistModels[id] = playlist
-                }
             } catch {
-                handleFetchError("Çalma listesi alınırken hata oluştu.")
+              self.screenState = .error("Çalma listeleri alınırken hata oluştu.")
             }
         }
     }
@@ -95,16 +88,5 @@ final class HomeViewModel: ObservableObject {
             screenState = .loaded
         }
     }
+  }
 
-  private func handleFetchError(_ errorMessage: String) {
-      updateOnMain {
-          self.screenState = .error(errorMessage)
-      }
-  }
-  private func updateOnMain(_ updates: @escaping () -> Void) {
-      DispatchQueue.main.async { [weak self] in
-          guard let self else { return }
-          updates()
-      }
-  }
-}

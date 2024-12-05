@@ -57,14 +57,9 @@ struct LibraryView: View {
   // MARK: - Loaded View
   private var loadedView: some View {
       Group {
-          if let tracks = libraryViewModel.tracks?.items {
+          if let tracks = libraryViewModel.getTrackItems() {
               List(tracks, id: \.track.uri) { item in
-                  TrackView(track: .init(
-                      id: item.track.uri,
-                      name: item.track.name,
-                      imageURL: item.track.album.images.first?.imageURL,
-                      singer: item.track.album.artists.first?.name ?? "artist")
-                  )
+                TrackView(track: libraryViewModel.getTrackUIModel(item))
                   .padding(.vertical, 8)
               }
               .listStyle(.plain)

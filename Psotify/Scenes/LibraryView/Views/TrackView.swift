@@ -23,6 +23,7 @@ struct TrackUIModel: Identifiable {
 }
 
 struct TrackView: View {
+    @EnvironmentObject var nav: Navigation
     let track: TrackUIModel
 
     var body: some View {
@@ -51,11 +52,23 @@ struct TrackView: View {
                     .font(.headline)
                     .lineLimit(1)
                     .padding(.bottom, 2)
+              HStack {
+                Text(track.singer )
+                  .font(.subheadline)
+                  .foregroundColor(.gray)
+                  .lineLimit(1)
+                Spacer()
+                Button {
+                  nav.navigate(to: .albumDetail(with: .init(id: track.id)))
+                } label: {
+                  Image(systemName: "arrow.forward.circle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 15, height: 15)
 
-                  Text(track.singer )
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
+                }
+
+              }
             }
             .padding(.leading, 8)
         }

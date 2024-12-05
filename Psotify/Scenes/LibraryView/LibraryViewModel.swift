@@ -30,4 +30,12 @@ class LibraryViewModel: ObservableObject {
             }
         }
     }
+
+  func getTrackItems() -> [UserTrackItem]? {
+    self.tracks?.items
+  }
+
+  func getTrackUIModel(_ model: UserTrackItem ) -> TrackUIModel {
+    .init(id: model.track.album.id, name: model.track.name, imageURL: model.track.album.images.first?.imageURL, singer: model.track.album.artists.first?.name ?? "")
+  }
 }
