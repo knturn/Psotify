@@ -11,14 +11,14 @@ enum Lifetime {
     case transient
 }
 
-protocol AppDIContainerProtocol {
+protocol AppDIContainerProtocol: AnyObject {
     func bind<Service>(service: Service.Type, _ lifetime: Lifetime, resolver: @escaping (AppDIContainerProtocol) -> Service)
     func resolve<Service>(_ type: Service.Type) -> Service
     func makeNavigation() -> Navigation
 }
 
 final class AppDIContainer: AppDIContainerProtocol {
-    static let shared: AppDIContainerProtocol = AppDIContainer()
+    static var shared: AppDIContainerProtocol = AppDIContainer()
 
     private var services: [String: ResolverWrapper] = [:]
     private var singletons: [String: Any] = [:]
@@ -62,6 +62,13 @@ final class AppDIContainer: AppDIContainerProtocol {
   func makeNavigation() -> Navigation {
       return Navigation()
   }
+
+  // MARK: - Test Only Reset
+  #if DEBUG
+  static func resetForTesting() {
+      shared = AppDIContainer()
+  }
+  #endif
 }
 
 // MARK: - Resolver Wrapper
