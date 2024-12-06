@@ -56,7 +56,7 @@ private extension NetworkService {
       do {
           return try JSONDecoder().decode(T.self, from: data)
       } catch {
-          throw NetworkServiceErrors.parseFailed
+        throw  data.isEmpty ? NetworkServiceErrors.fetchedButEmtpy : NetworkServiceErrors.parseFailed
       }
   }
 }
