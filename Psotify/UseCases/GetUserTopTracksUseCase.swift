@@ -6,11 +6,11 @@
 //
 
 import Foundation
-protocol GetUserTopTracksUseCaseProtocol {
+protocol GetUserSavedTracksUseCaseProtocol {
   func fetchTopTracks() async throws -> UserTracksResponse
 }
 
-struct GetUserTopTracksUseCase: GetUserTopTracksUseCaseProtocol {
+class GetUserSavedTracksUseCase: GetUserSavedTracksUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {
@@ -18,7 +18,7 @@ struct GetUserTopTracksUseCase: GetUserTopTracksUseCaseProtocol {
   }
 
   func fetchTopTracks() async throws -> UserTracksResponse {
-    guard let request = PsotifyEndpoint.userTopTracks.request else {
+    guard let request = PsotifyEndpoint.userSavedTracks.request else {
       throw SpotifyAuthError.invalidAuthCode
     }
 

@@ -11,7 +11,7 @@ protocol GetSearchResultProtocol {
   func fetchResult(with query: String, for types: [String]) async throws -> SearchResponse
 }
 
-struct GetSearchResultUseCase: GetSearchResultProtocol {
+class GetSearchResultUseCase: GetSearchResultProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {

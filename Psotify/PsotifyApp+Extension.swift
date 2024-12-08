@@ -11,6 +11,10 @@ extension PsotifyApp {
   // Service Dependency Injection with DI container
 
   func setupDIContainer(with diContainer: AppDIContainerProtocol){
+    diContainer.bind(service: KeyChainServiceProtocol.self, .transient) { keychainService in
+      KeyChainService()
+    }
+
     diContainer.bind(service: NetworkServiceProtocol.self, .transient) { networkService in
       NetworkService()
     }
@@ -39,8 +43,8 @@ extension PsotifyApp {
       GetSearchResultUseCase(networkService: netwokService)
     }
 
-    diContainer.bind(service: GetUserTopTracksUseCaseProtocol.self, .transient) { getUserTopTracksUseCase in
-      GetUserTopTracksUseCase(networkService: netwokService)
+    diContainer.bind(service: GetUserSavedTracksUseCaseProtocol.self, .transient) { getUserSavedTracksUseCase in
+      GetUserSavedTracksUseCase(networkService: netwokService)
     }
   }
 }

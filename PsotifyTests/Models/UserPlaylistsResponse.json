@@ -1,0 +1,46 @@
+{
+  "href": "https://api.spotify.com/v1/users/leonidastrn/playlists?offset=0&limit=1&locale=en-US,en;q%3D0.9,tr;q%3D0.8",
+  "limit": 1,
+  "next": "https://api.spotify.com/v1/users/leonidastrn/playlists?offset=1&limit=1&locale=en-US,en;q%3D0.9,tr;q%3D0.8",
+  "offset": 0,
+  "previous": null,
+  "total": 19,
+  "items": [
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/76KJbQh2jHQ68TVA5q2FEQ"
+      },
+      "href": "https://api.spotify.com/v1/playlists/76KJbQh2jHQ68TVA5q2FEQ",
+      "id": "76KJbQh2jHQ68TVA5q2FEQ",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00001e020fe1c29868a13e9c2f704643",
+          "height": null,
+          "width": null
+        }
+      ],
+      "name": "Beyza the roman",
+      "owner": {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/leonidastrn"
+        },
+        "href": "https://api.spotify.com/v1/users/leonidastrn",
+        "id": "leonidastrn",
+        "type": "user",
+        "uri": "spotify:user:leonidastrn",
+        "display_name": "Kaan"
+      },
+      "public": true,
+      "snapshot_id": "AAAABtpdMKtS97FziBP91FIy+9Dhx9A2",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/76KJbQh2jHQ68TVA5q2FEQ/tracks",
+        "total": 3
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:76KJbQh2jHQ68TVA5q2FEQ",
+      "primary_color": null
+    }
+  ]
+}

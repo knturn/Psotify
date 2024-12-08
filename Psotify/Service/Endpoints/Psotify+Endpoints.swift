@@ -17,7 +17,7 @@ enum PsotifyEndpoint {
     case playlist(id: String)
     case album(id: String)
     case track(id: String)
-    case userTopTracks
+    case userSavedTracks
     case search(query: String, types: [String])
 
     var request: URLRequest? {

@@ -8,16 +8,18 @@
 import Foundation
 
 protocol UserDefaultsServiceProtocol {
-    static func saveElement(defaults: UserDefaults, model: Encodable, forKey key: String) async throws
-    static func removeElement(defaults: UserDefaults, forKey key: String)
-    static func getElement<T: Codable>(defaults: UserDefaults, forKey key: String, type: T.Type) -> T?
+    func saveElement(defaults: UserDefaults, model: Encodable, forKey key: String) async throws
+    func removeElement(defaults: UserDefaults, forKey key: String)
+    func getElement<T: Codable>(defaults: UserDefaults, forKey key: String, type: T.Type) -> T?
 }
 
 final class UserDefaultsService {
+  static let shared = UserDefaultsService()
+  private init() {}
 }
 
 extension UserDefaultsService: UserDefaultsServiceProtocol {
-    static func saveElement(defaults: UserDefaults = .standard, model: Encodable, forKey key: String) async throws {
+    func saveElement(defaults: UserDefaults = .standard, model: Encodable, forKey key: String) async throws {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(model)
@@ -26,12 +28,12 @@ extension UserDefaultsService: UserDefaultsServiceProtocol {
             throw UserDefaultsError.saveError
         }
     }
-    
-    static func removeElement(defaults: UserDefaults = .standard, forKey key: String) {
+
+    func removeElement(defaults: UserDefaults = .standard, forKey key: String) {
         defaults.removeObject(forKey: key)
     }
-    
-    static func getElement<T: Codable>(defaults: UserDefaults = .standard, forKey key: String, type: T.Type) -> T? {
+
+    func getElement<T: Codable>(defaults: UserDefaults = .standard, forKey key: String, type: T.Type) -> T? {
         guard let data = defaults.data(forKey: key) else {
             return nil
         }

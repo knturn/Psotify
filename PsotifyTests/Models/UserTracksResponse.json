@@ -1,0 +1,92 @@
+{
+  "href": "https://api.spotify.com/v1/me/tracks?offset=0&limit=1&locale=en-US,en;q%3D0.9,tr;q%3D0.8",
+  "limit": 1,
+  "next": "https://api.spotify.com/v1/me/tracks?offset=1&limit=1&locale=en-US,en;q%3D0.9,tr;q%3D0.8",
+  "offset": 0,
+  "previous": null,
+  "total": 23,
+  "items": [
+    {
+      "added_at": "2021-07-19T23:17:53Z",
+      "track": {
+        "album": {
+          "album_type": "single",
+          "total_tracks": 5,
+          "available_markets": ["AR", "AU", "AT", "BE", "BO", "BR", "BG", "CA", "CL", "CO", "CR", "CY", "CZ", "DK", "DO", "DE", "EC", "EE", "SV", "FI", "FR", "GR", "GT", "HN", "HK", "HU", "IS", "IE", "IT", "LV", "LT", "LU", "MY", "MT", "MX", "NL", "NZ", "NI", "NO", "PA", "PY", "PE", "PH", "PL", "PT", "SG", "SK", "ES", "SE", "CH", "TW", "TR", "UY", "US", "GB", "AD", "LI", "MC", "ID", "JP", "TH", "VN", "RO", "IL", "ZA", "SA", "AE", "BH", "QA", "OM", "KW", "EG", "MA", "DZ", "TN", "LB", "JO", "PS", "IN", "BY", "KZ", "MD", "UA", "AL", "BA", "HR", "ME", "MK", "RS", "SI", "KR", "BD", "PK", "LK", "GH", "KE", "NG", "TZ", "UG", "AG", "AM", "BS", "BB", "BZ", "BT", "BW", "BF", "CV", "CW", "DM", "FJ", "GM", "GE", "GD", "GW", "GY", "HT", "JM", "KI", "LS", "LR", "MW", "MV", "ML", "MH", "FM", "NA", "NR", "NE", "PW", "PG", "PR", "WS", "SM", "ST", "SN", "SC", "SL", "SB", "KN", "LC", "VC", "SR", "TL", "TO", "TT", "TV", "VU", "AZ", "BN", "BI", "KH", "CM", "TD", "KM", "GQ", "SZ", "GA", "GN", "KG", "LA", "MO", "MR", "MN", "NP", "RW", "TG", "UZ", "ZW", "BJ", "MG", "MU", "MZ", "AO", "CI", "DJ", "ZM", "CD", "CG", "IQ", "LY", "TJ", "VE", "ET", "XK"],
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/5JBOWYaxcyNzWuq3PewTMk"
+          },
+          "href": "https://api.spotify.com/v1/albums/5JBOWYaxcyNzWuq3PewTMk",
+          "id": "5JBOWYaxcyNzWuq3PewTMk",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab67616d0000b273aa72709ce92353f462a471a9",
+              "height": 640,
+              "width": 640
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00001e02aa72709ce92353f462a471a9",
+              "height": 300,
+              "width": 300
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616d00004851aa72709ce92353f462a471a9",
+              "height": 64,
+              "width": 64
+            }
+          ],
+          "name": "We Could Be The Same",
+          "release_date": "2010-04-16",
+          "release_date_precision": "day",
+          "type": "album",
+          "uri": "spotify:album:5JBOWYaxcyNzWuq3PewTMk",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/7rEIUw67hRTgievwuKQGSj"
+              },
+              "href": "https://api.spotify.com/v1/artists/7rEIUw67hRTgievwuKQGSj",
+              "id": "7rEIUw67hRTgievwuKQGSj",
+              "name": "maNga",
+              "type": "artist",
+              "uri": "spotify:artist:7rEIUw67hRTgievwuKQGSj"
+            }
+          ],
+          "is_playable": true
+        },
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/7rEIUw67hRTgievwuKQGSj"
+            },
+            "href": "https://api.spotify.com/v1/artists/7rEIUw67hRTgievwuKQGSj",
+            "id": "7rEIUw67hRTgievwuKQGSj",
+            "name": "maNga",
+            "type": "artist",
+            "uri": "spotify:artist:7rEIUw67hRTgievwuKQGSj"
+          }
+        ],
+        "available_markets": ["AR", "AU", "AT", "BE", "BO", "BR", "BG", "CA", "CL", "CO", "CR", "CY", "CZ", "DK", "DO", "DE", "EC", "EE", "SV", "FI", "FR", "GR", "GT", "HN", "HK", "HU", "IS", "IE", "IT", "LV", "LT", "LU", "MY", "MT", "MX", "NL", "NZ", "NI", "NO", "PA", "PY", "PE", "PH", "PL", "PT", "SG", "SK", "ES", "SE", "CH", "TW", "TR", "UY", "US", "GB", "AD", "LI", "MC", "ID", "JP", "TH", "VN", "RO", "IL", "ZA", "SA", "AE", "BH", "QA", "OM", "KW", "EG", "MA", "DZ", "TN", "LB", "JO", "PS", "IN", "BY", "KZ", "MD", "UA", "AL", "BA", "HR", "ME", "MK", "RS", "SI", "KR", "BD", "PK", "LK", "GH", "KE", "NG", "TZ", "UG", "AG", "AM", "BS", "BB", "BZ", "BT", "BW", "BF", "CV", "CW", "DM", "FJ", "GM", "GE", "GD", "GW", "GY", "HT", "JM", "KI", "LS", "LR", "MW", "MV", "ML", "MH", "FM", "NA", "NR", "NE", "PW", "PG", "PR", "WS", "SM", "ST", "SN", "SC", "SL", "SB", "KN", "LC", "VC", "SR", "TL", "TO", "TT", "TV", "VU", "AZ", "BN", "BI", "KH", "CM", "TD", "KM", "GQ", "SZ", "GA", "GN", "KG", "LA", "MO", "MR", "MN", "NP", "RW", "TG", "UZ", "ZW", "BJ", "MG", "MU", "MZ", "AO", "CI", "DJ", "ZM", "CD", "CG", "IQ", "LY", "TJ", "VE", "ET", "XK"],
+        "disc_number": 1,
+        "duration_ms": 183136,
+        "explicit": false,
+        "external_ids": {
+          "isrc": "TR8672000015"
+        },
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1JzWdmqLRpqu2x6mfmxKjU"
+        },
+        "href": "https://api.spotify.com/v1/tracks/1JzWdmqLRpqu2x6mfmxKjU",
+        "id": "1JzWdmqLRpqu2x6mfmxKjU",
+        "is_playable": true,
+        "name": "We Could Be The Same - Istanbul",
+        "popularity": 53,
+        "preview_url": null,
+        "track_number": 2,
+        "type": "track",
+        "uri": "spotify:track:1JzWdmqLRpqu2x6mfmxKjU",
+        "is_local": false
+      }
+    }
+  ]
+}
