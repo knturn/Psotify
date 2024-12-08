@@ -82,7 +82,7 @@ class PsotifyRequestFactory {
           guard let url = Configuration.apiBaseURL?.appendingPathComponent("tracks/\(id)") else { return nil }
           builder = RequestBuilder(url: url, httpMethod: .GET)
               .setHeaders([EndPointConstants.authorization: getBearerHeader()])
-        case .userTopTracks:
+        case .userSavedTracks:
           guard let url = Configuration.apiBaseURL?.appendingPathComponent("me/tracks") else { return nil }
           builder = RequestBuilder(url: url, httpMethod: .GET)
               .setHeaders([EndPointConstants.authorization: getBearerHeader()])
@@ -123,7 +123,7 @@ class PsotifyRequestFactory {
     }
 
     private static func getBearerHeader() -> String {
-        let accessToken = UserDefaultsService.getElement(forKey: UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self)?.accessToken
+      let accessToken = UserDefaultsService.shared.getElement(forKey: UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self)?.accessToken
         return "Bearer " + (accessToken ?? "")
     }
 }
