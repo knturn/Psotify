@@ -10,7 +10,7 @@ protocol GetPlaylistsUseCaseProtocol {
   func fetchPlaylist(with id: String) async throws -> PlayListDetailResponse?
   func fetchUserPlaylist() async throws -> [PlaylistItem]?
 }
-struct GetPlaylistsUseCase: GetPlaylistsUseCaseProtocol {
+class GetPlaylistsUseCase: GetPlaylistsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {
