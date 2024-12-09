@@ -64,8 +64,8 @@ class AppDIContainerTests: XCTestCase {
         let resolved1: MockServiceProtocol = sutContainer.resolve(MockServiceProtocol.self)
         let resolved2: MockServiceProtocol = sutContainer.resolve(MockServiceProtocol.self)
 
-        // Then: Both resolutions should return different instances
-        XCTAssertFalse(resolved1 as AnyObject === resolved2 as AnyObject, "Transient services should return new instances.")
+        // Then: Both resolutions should return same instances because MockService is class so when you want to resolve service, It should give you same instance until die
+        XCTAssertTrue(resolved1 as AnyObject === resolved2 as AnyObject, "Transient services should return the same instance.")
     }
 
     // MARK: - Fatal Testing (Unregistered Service Resolution)

@@ -9,22 +9,14 @@ import Foundation
 import XCTest
 @testable import Psotify
 
-class BaseUseCaseTest<U: AnyObject>: XCTestCase {
+class BaseUseCaseTest: XCTestCase {
     let bundle = Bundle(for: BaseUseCaseTest.self)
-
-    var networkServiceSpy: NetworkServiceSpy!
-    var useCase: U!
-
+  
     override func setUpWithError() throws {
-        networkServiceSpy = nil
-        useCase = nil
         URLProtocolStub.startInterceptingRequests()
-
     }
 
     override func tearDownWithError() throws {
-        networkServiceSpy = nil
-        useCase = nil
         URLProtocolStub.stopInterceptingRequests()
     }
 

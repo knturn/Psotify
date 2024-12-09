@@ -20,20 +20,20 @@ final class AuthUseCase: AuthUseCaseProtocol {
     private let keychainService: KeyChainServiceProtocol
     private let userDefaultsService: UserDefaultsServiceProtocol
 
-    private let loginStatePublisher: CurrentValueSubject<UserLoginState, Never>
+    private let loginState: CurrentValueSubject<UserLoginState, Never>
     
     var loginPublisher: AnyPublisher<UserLoginState, Never>  {
-        loginStatePublisher.eraseToAnyPublisher()
+        loginState.eraseToAnyPublisher()
     }
 
   init(networkService: NetworkServiceProtocol,
          keychainService: KeyChainServiceProtocol = AppDIContainer.shared.resolve(KeyChainServiceProtocol.self),
        userDefaultsService: UserDefaultsServiceProtocol = UserDefaultsService.shared,
-         loginStatePublisher: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
+         loginState: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
         self.networkService = networkService
         self.keychainService = keychainService
         self.userDefaultsService = userDefaultsService
-        self.loginStatePublisher = loginStatePublisher
+        self.loginState = loginState
     }
 
     func logIn(with authCode: String) async throws {
@@ -45,10 +45,10 @@ final class AuthUseCase: AuthUseCaseProtocol {
             try await fetchToken()
             
             // 3. Login successful
-            loginStatePublisher.send(.login)
+            loginState.send(.login)
         } catch {
             // Handle login failure and set state to logout
-            loginStatePublisher.send(.logout)
+            loginState.send(.logout)
             throw SpotifyAuthError.invalidAuthCode
         }
     }
@@ -73,7 +73,7 @@ final class AuthUseCase: AuthUseCaseProtocol {
               model: tokenStorage,
               forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
           )
-          loginStatePublisher.send(.login)
+          loginState.send(.login)
       } catch {
           throw SpotifyAuthError.tokenUnavailable
       }
@@ -83,7 +83,7 @@ final class AuthUseCase: AuthUseCaseProtocol {
       // Retrieve the token model
       guard let tokenModel = getTokenModel(), tokenModel.refreshToken != nil else {
           // If there's no token or no refresh token, send logout state
-          loginStatePublisher.send(.logout)
+          loginState.send(.logout)
           return
       }
 
@@ -94,22 +94,22 @@ final class AuthUseCase: AuthUseCaseProtocol {
               try await handleTokenRefresh()
           } catch {
               // If refreshing the token fails, send logout state
-              loginStatePublisher.send(.logout)
+              loginState.send(.logout)
               throw error
           }
           return
       }
 
       // If the token is valid and not expired, send login state
-      loginStatePublisher.send(.login)
+      loginState.send(.login)
   }
 
   private func handleTokenRefresh() async throws {
       do {
           try await refreshToken()
-          loginStatePublisher.send(.login)
+          loginState.send(.login)
       } catch {
-          loginStatePublisher.send(.logout)
+          loginState.send(.logout)
       }
   }
 

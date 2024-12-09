@@ -6,73 +6,88 @@
 //
 
 import Foundation
+
 enum Lifetime {
-    case singleton
-    case transient
+  case singleton
+  case transient
 }
 
 protocol AppDIContainerProtocol: AnyObject {
-    func bind<Service>(service: Service.Type, _ lifetime: Lifetime, resolver: @escaping (AppDIContainerProtocol) -> Service)
-    func resolve<Service>(_ type: Service.Type) -> Service
-    func makeNavigation() -> Navigation
+  func bind<Service>(service: Service.Type, _ lifetime: Lifetime, resolver: @escaping (AppDIContainerProtocol) -> Service)
+  func resolve<Service>(_ type: Service.Type) -> Service
+  func makeNavigation() -> Navigation
 }
 
 final class AppDIContainer: AppDIContainerProtocol {
-    static var shared: AppDIContainerProtocol = AppDIContainer()
+  static var shared: AppDIContainerProtocol = AppDIContainer()
 
-    private var services: [String: ResolverWrapper] = [:]
-    private var singletons: [String: Any] = [:]
+  private var services: [String: ResolverWrapper] = [:]
+  private var singletons: [String: Any] = [:]
+  private var transients: [String: TransientBox] = [:]
 
-    private init() {}
+  private init() {}
 
-    func bind<Service>(
-        service: Service.Type,
-        _ lifetime: Lifetime,
-        resolver: @escaping (AppDIContainerProtocol) -> Service
-    ) {
-        let key = String(describing: service)
-        services[key] = ResolverWrapper(lifetime: lifetime, resolve: resolver)
+  func bind<Service>(
+    service: Service.Type,
+    _ lifetime: Lifetime,
+    resolver: @escaping (AppDIContainerProtocol) -> Service
+  ) {
+    let key = String(describing: service)
+    services[key] = ResolverWrapper(lifetime: lifetime, resolve: resolver)
+  }
+
+  func resolve<Service>(_ serviceType: Service.Type) -> Service {
+    let key = String(describing: Service.self)
+    guard let wrapper = services[key] else {
+      fatalError("Service dependency injection error: \(key) is not registered.")
     }
 
-  func resolve<Service>(_ type: Service.Type) -> Service {
-      let key = String(describing: Service.self)
-      guard let wrapper = services[key] else {
-          fatalError("Service dependency injection error: \(key) is not registered.")
+    switch wrapper.lifetime {
+    case .singleton:
+      if let instance = singletons[key] as? Service {
+        return instance
+      }
+      guard let instance = wrapper.resolve(self) as? Service else {
+        fatalError("Service dependency injection error: Failed to resolve \(key).")
+      }
+      singletons[key] = instance
+      return instance
+
+    case .transient:
+      if let instance = transients[key]?.service as? Service {
+        return instance
       }
 
-      switch wrapper.lifetime {
-      case .singleton:
-          if let instance = singletons[key] as? Service {
-              return instance
-          }
-          guard let instance = wrapper.resolve(self) as? Service else {
-              fatalError("Service dependency injection error: Failed to resolve \(key).")
-          }
-          singletons[key] = instance
-          return instance
-
-      case .transient:
-          guard let instance = wrapper.resolve(self) as? Service else {
-              fatalError("Service dependency injection error: Failed to resolve \(key).")
-          }
-          return instance
+      guard let instance = wrapper.resolve(self) as? Service else {
+        fatalError("Service dependency injection error: Failed to resolve \(key).")
       }
+
+      if type(of: instance as Any) is AnyClass {
+        transients[key] = .init(service: instance as AnyObject)
+      }
+
+      return instance
+    }
   }
 
   func makeNavigation() -> Navigation {
-      return Navigation()
+    return Navigation()
   }
 
   // MARK: - Test Only Reset
-  #if DEBUG
+#if DEBUG
   static func resetForTesting() {
-      shared = AppDIContainer()
+    shared = AppDIContainer()
   }
-  #endif
+#endif
 }
 
 // MARK: - Resolver Wrapper
 private struct ResolverWrapper {
-    let lifetime: Lifetime
-    let resolve: (AppDIContainerProtocol) -> Any
+  let lifetime: Lifetime
+  let resolve: (AppDIContainerProtocol) -> Any
+}
+
+private struct TransientBox {
+  weak var service: AnyObject?
 }
