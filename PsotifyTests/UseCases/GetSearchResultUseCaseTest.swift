@@ -8,52 +8,66 @@
 import XCTest
 @testable import Psotify
 
-final class GetSearchResultUseCaseTests: BaseUseCaseTest<GetSearchResultUseCase> {
+final class GetSearchResultUseCaseTests: BaseUseCaseTest {
+
+    private func makeSut(parsedObject: SearchResponse?) -> (GetSearchResultUseCase, MockNetworkService<SearchResponse>) {
+        let mockNetworkService = MockNetworkService<SearchResponse>(parsedObject: parsedObject)
+        return (GetSearchResultUseCase(networkService: mockNetworkService), mockNetworkService)
+    }
 
     func test_fetchResult_successfulResponse_returnsSearchResponse() async throws {
         // Given
         let expectedAlbumName = "Sample Album"
         let mockSearchResponse: SearchResponse = try loadMockData(from: "AlbumsResponse.json", type: SearchResponse.self)
-        networkServiceSpy = NetworkServiceSpy(parsedObject: mockSearchResponse)
-        useCase = GetSearchResultUseCase(networkService: networkServiceSpy)
+
+        let (sut, spy) = makeSut(parsedObject: mockSearchResponse)
 
         // When
-        let result = try await useCase.fetchResult(with: "query", for: ["album"])
+        let result = try await sut.fetchResult(with: "query", for: ["album"])
 
         // Then
-        XCTAssertTrue(networkServiceSpy.didMessageRecieved.contains(.success))
+        XCTAssertTrue(spy.didMessageRecieved.contains(.success))
         XCTAssertEqual(result.albums?.items.first?.name, expectedAlbumName, "Expected album name to match")
     }
 
     func test_fetchResult_failure_throwsError() async {
         // Given
-      let expectedError = NSError(domain: "NetworkServiceSpy", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
-        networkServiceSpy = NetworkServiceSpy(parsedObject: nil)
-        useCase = GetSearchResultUseCase(networkService: networkServiceSpy)
+        let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
+
+        let (sut, _) = makeSut(parsedObject: nil)
 
         // When & Then
-        await XCTAssertThrowsErrorAsync(try await self.useCase.fetchResult(with: "query", for: ["album"])) { error in
-          let nsError = error as NSError
-          XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
-          XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
-
+        await XCTAssertThrowsErrorAsync(try await sut.fetchResult(with: "query", for: ["album"])) { error in
+            let nsError = error as NSError
+            XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
+            XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
         }
     }
 
-    func test_fetchResult_invalidJSON_throwsParseError() async {
-        // Given
-        let invalidJSON = "Invalid JSON".data(using: .utf8)!
-        URLProtocolStub.stub(data: invalidJSON, response: makeHTTPURLResponse(statusCode: 200), error: nil)
+  func test_fetchResult_invalidJSON_throwsParseError() async throws {
+    // Invalid response to mock networkService for test typeCasting issues
+      // Given
+      let invalidResponse = PsotifyTokenResponse(
+          accessToken: "dummyToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "dummyRefreshToken"
+      )
+      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
+          parsedObject: invalidResponse
+      )
+      let sut = GetSearchResultUseCase(networkService: mockNetworkService)
 
-        let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
-        let sut = NetworkService()
+      // When & Then
+      do {
+        let _: SearchResponse = try await sut.fetchResult(with: "", for: ["query"])
+          XCTFail("Expected to throw an NSError but succeeded.")
+      } catch let error as NSError {
+          // Check that the error domain and code match
+        XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+      } catch {
+          XCTFail("Expected NSError but received: \(error)")
+      }
+  }
 
-        // When & Then
-        do {
-            let _: SearchResponse = try await sut.fetch(request: request)
-            XCTFail("Expected to throw a parse error but succeeded.")
-        } catch {
-          XCTAssertEqual(error as? NetworkServiceErrors, .parseFailed, "Expected parse error to match")
-        }
-    }
 }

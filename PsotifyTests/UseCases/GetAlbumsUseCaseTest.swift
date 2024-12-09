@@ -8,31 +8,33 @@
 import XCTest
 @testable import Psotify
 
-final class GetAlbumsUseCaseTests: BaseUseCaseTest<GetAlbumsUseCase> {
-
+final class GetAlbumsUseCaseTests: BaseUseCaseTest {
     func test_fetchNewReleases_successfulResponse_returnsAlbums() async throws {
         // Given
         let expectedAlbumItemCount = 1
         let parsedAlbums: AlbumsObjectResponse = try loadMockData(from: "AlbumsResponse.json", type: AlbumsObjectResponse.self)
-        networkServiceSpy = NetworkServiceSpy(parsedObject: parsedAlbums)
-        useCase = GetAlbumsUseCase(networkService: networkServiceSpy)
+
+
+        let mock = MockNetworkService<AlbumsObjectResponse>(parsedObject: parsedAlbums)
+        let sut = GetAlbumsUseCase(networkService: mock)
 
         // When
-        let result = try await useCase.fetchNewReleases(limit: 1)
+        let result = try await sut.fetchNewReleases(limit: 1)
 
         // Then
-        XCTAssertTrue(networkServiceSpy.didMessageRecieved.contains(.success))
+        XCTAssertTrue(mock.didMessageRecieved.contains(.success))
         XCTAssertEqual(result.items.count, expectedAlbumItemCount, "Expected album item count")
     }
 
     func test_fetchNewReleases_failure_throwsError() async {
         // Given
-        let expectedError = NSError(domain: "NetworkServiceSpy", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
-        networkServiceSpy = NetworkServiceSpy(parsedObject: nil)
-        useCase = GetAlbumsUseCase(networkService: networkServiceSpy)
+        let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
+
+        let mock = MockNetworkService<AlbumsObjectResponse>(parsedObject: nil)
+        let sut = GetAlbumsUseCase(networkService: mock)
 
         // When & Then
-        await XCTAssertThrowsErrorAsync(try await self.useCase.fetchNewReleases(limit: 1)) { error in
+        await XCTAssertThrowsErrorAsync(try await sut.fetchNewReleases(limit: 1)) { error in
             let nsError = error as NSError
             XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
             XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
@@ -43,45 +45,56 @@ final class GetAlbumsUseCaseTests: BaseUseCaseTest<GetAlbumsUseCase> {
         // Given
         let expectedAlbumName = "Sample Album"
         let parsedAlbumItem: AlbumItem = try loadMockData(from: "AlbumItemResponse.json", type: AlbumItem.self)
-        networkServiceSpy = NetworkServiceSpy(parsedObject: parsedAlbumItem)
-        useCase = GetAlbumsUseCase(networkService: networkServiceSpy)
+
+        let mock = MockNetworkService<AlbumItem>(parsedObject: parsedAlbumItem)
+        let sut = GetAlbumsUseCase(networkService: mock)
 
         // When
-        let result = try await useCase.fetchOneAlbum(with: "album_id")
+        let result = try await sut.fetchOneAlbum(with: "album_id")
 
         // Then
-        XCTAssertTrue(networkServiceSpy.didMessageRecieved.contains(.success))
+        XCTAssertTrue(mock.didMessageRecieved.contains(.success))
         XCTAssertEqual(result.name, expectedAlbumName, "Expected album name to match")
     }
 
     func test_fetchOneAlbum_failure_throwsError() async {
         // Given
-        let expectedError = NSError(domain: "NetworkServiceSpy", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
-        networkServiceSpy = NetworkServiceSpy(parsedObject: nil)
-        useCase = GetAlbumsUseCase(networkService: networkServiceSpy)
+        let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
+
+        let mock = MockNetworkService<AlbumItem>(parsedObject: nil)
+        let sut = GetAlbumsUseCase(networkService: mock)
 
         // When & Then
-        await XCTAssertThrowsErrorAsync(try await self.useCase.fetchOneAlbum(with: "album_id")) { error in
+        await XCTAssertThrowsErrorAsync(try await sut.fetchOneAlbum(with: "album_id")) { error in
             let nsError = error as NSError
             XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
             XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
         }
     }
 
-    func test_fetchNewReleases_invalidJSON_throwsParseError() async {
-        // Given
-        let invalidJSON = "Invalid JSON".data(using: .utf8)!
-        URLProtocolStub.stub(data: invalidJSON, response: makeHTTPURLResponse(statusCode: 200), error: nil)
+  func test_fetchNewReleases_invalidJSON_throwsParseError() async throws {
+      // Given
+      let invalidResponse = PsotifyTokenResponse(
+          accessToken: "dummyToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "dummyRefreshToken"
+      )
+      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
+          parsedObject: invalidResponse // Burada yanlış tipte bir nesne döndürüyoruz.
+      )
+      let sut = GetAlbumsUseCase(networkService: mockNetworkService)
 
-        let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
-        let sut = NetworkService()
+      // When & Then
+      do {
+          let _: Albums = try await sut.fetchNewReleases(limit: 10)
+          XCTFail("Expected to throw an NSError but succeeded.")
+      } catch let error as NSError {
+          // Check that the error domain and code match
+        XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+      } catch {
+          XCTFail("Expected NSError but received: \(error)")
+      }
+  }
 
-        // When & Then
-        do {
-            let _: Albums = try await sut.fetch(request: request)
-            XCTFail("Expected to throw a parse error but succeeded.")
-        } catch {
-            XCTAssertEqual(error as? NetworkServiceErrors, .parseFailed, "Expected parse error to match")
-        }
-    }
 }

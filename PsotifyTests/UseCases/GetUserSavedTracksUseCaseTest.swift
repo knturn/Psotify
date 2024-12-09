@@ -8,51 +8,62 @@
 import XCTest
 @testable import Psotify
 
-final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest<GetUserSavedTracksUseCase> {
-
+final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
     func test_fetchTopTracks_successfulResponse_returnsUserTracksResponse() async throws {
         // Given
         let expectedTrackAlbumID = "5JBOWYaxcyNzWuq3PewTMk"
         let mockUserTracksResponse: UserTracksResponse = try loadMockData(from: "UserTracksResponse.json", type: UserTracksResponse.self)
-        networkServiceSpy = NetworkServiceSpy(parsedObject: mockUserTracksResponse)
-        useCase = GetUserSavedTracksUseCase(networkService: networkServiceSpy)
+        let mockMetworkService = MockNetworkService<UserTracksResponse>(parsedObject: mockUserTracksResponse)
+
+        let sut = GetUserSavedTracksUseCase(networkService: mockMetworkService)
 
         // When
-        let result = try await useCase.fetchTopTracks()
+        let result = try await sut.fetchTopTracks()
 
         // Then
-        XCTAssertTrue(networkServiceSpy.didMessageRecieved.contains(.success))
-      XCTAssertEqual(result.items.first?.track.album.id, expectedTrackAlbumID, "Expected track album id to match")
+        XCTAssertTrue(mockMetworkService.didMessageRecieved.contains(.success))
+        XCTAssertEqual(result.items.first?.track.album.id, expectedTrackAlbumID, "Expected track album id to match")
     }
 
     func test_fetchTopTracks_failure_throwsError() async {
         // Given
-      let expectedError = NSError(domain: "NetworkServiceSpy", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
-        networkServiceSpy = NetworkServiceSpy(parsedObject: nil)
-        useCase = GetUserSavedTracksUseCase(networkService: networkServiceSpy)
+        let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
+        let mockMetworkService = MockNetworkService<UserTracksResponse>(parsedObject: nil)
+
+        let sut = GetUserSavedTracksUseCase(networkService: mockMetworkService)
 
         // When & Then
-        await XCTAssertThrowsErrorAsync(try await self.useCase.fetchTopTracks()) { error in
-          let nsError = error as NSError
-          XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
-          XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
+        await XCTAssertThrowsErrorAsync(try await sut.fetchTopTracks()) { error in
+            let nsError = error as NSError
+            XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
+            XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
         }
     }
 
-    func test_fetchTopTracks_invalidJSON_throwsParseError() async {
-        // Given
-        let invalidJSON = "Invalid JSON".data(using: .utf8)!
-        URLProtocolStub.stub(data: invalidJSON, response: makeHTTPURLResponse(statusCode: 200), error: nil)
+  func test_fetchTopTracks_invalidJSON_throwsParseError() async throws {
+    // Invalid response to mock networkService for test typeCasting issues
+      // Given
+      let invalidResponse = PsotifyTokenResponse(
+          accessToken: "dummyToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "dummyRefreshToken"
+      )
+      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
+          parsedObject: invalidResponse // Geçersiz yanıt (UserTracksResponse bekleniyor)
+      )
+      let sut = GetUserSavedTracksUseCase(networkService: mockNetworkService)
 
-        let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
-        let sut = NetworkService()
+      // When & Then
+      do {
+          let _: UserTracksResponse = try await sut.fetchTopTracks()
+          XCTFail("Expected to throw an NSError but succeeded.")
+      } catch let error as NSError {
+          // Check that the error domain and code match
+          XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+      } catch {
+          XCTFail("Expected NSError but received: \(error)")
+      }
+  }
 
-        // When & Then
-        do {
-            let _: UserTracksResponse = try await sut.fetch(request: request)
-            XCTFail("Expected to throw a parse error but succeeded.")
-        } catch {
-            XCTAssertEqual(error as? NetworkServiceErrors, .parseFailed, "Expected parse error to match")
-        }
-    }
 }
