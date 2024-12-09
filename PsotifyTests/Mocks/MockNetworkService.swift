@@ -8,33 +8,37 @@
 import Foundation
 @testable import Psotify
 
-final class MockNetworkService<ResponseType: Decodable>: NetworkServiceProtocol {
-    var mockData: Data?
-    var mockError: Error?
-    var shouldReturnError = false
+final class MockNetworkService<ResponseType: Codable>: NetworkServiceProtocol {
+  private let parsedObject: Codable?
+  let errorToThrow: Error?
+  private(set) var didMessageRecieved: [MockNetworkServiceMessages?] = .init()
 
-    init(mockData: Data? = nil, mockError: Error? = nil, shouldReturnError: Bool = false) {
-        self.mockData = mockData
-        self.mockError = mockError
-        self.shouldReturnError = shouldReturnError
+  init(parsedObject: Codable? = nil, errorToThrow: Error? = nil) {
+    self.parsedObject = parsedObject
+    self.errorToThrow = errorToThrow
+  }
+
+  func fetch<T>(request: URLRequest) async throws -> T where T: Decodable {
+
+    if let error = errorToThrow {
+      didMessageRecieved.append(.returnWantedError)
+      throw error
     }
 
-    func fetch<Response: Decodable>(request: URLRequest) async throws -> Response {
-        if shouldReturnError {
-            if let error = mockError {
-                throw error
-            }
-            throw NSError(domain: "MockError", code: -1, userInfo: nil)
-        }
-
-        if let data = mockData {
-            let decoder = JSONDecoder()
-            return try decoder.decode(Response.self, from: data)
-        }
-
-        throw NSError(domain: "MockError", code: -1, userInfo: nil)
+    guard let response = parsedObject as? T else {
+      didMessageRecieved.append(.withParseError)
+      throw NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid data type"])
     }
+    didMessageRecieved.append(.success)
+    return response
+
+
+  }
 }
 
-
-
+enum MockNetworkServiceMessages {
+  case returnWantedError
+  case success
+  case withParseError
+  case withLoadJSONError
+}
