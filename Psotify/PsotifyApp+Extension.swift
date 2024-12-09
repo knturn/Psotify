@@ -19,32 +19,37 @@ extension PsotifyApp {
       NetworkService()
     }
 
-    let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
-
     diContainer.bind(service: AuthUseCaseProtocol.self, .singleton) { authUseCase in
-      AuthUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return AuthUseCase(networkService: netwokService)
     }
 
     diContainer.bind(service: GetSongUseCaseProtocol.self, .transient) { songUseCase in
-      GetSongUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetSongUseCase(networkService: netwokService)
     }
     diContainer.bind(service: GetUserProfileUseCaseProtocol.self, .transient) { profileUseCase in
-      GetUserProfileUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetUserProfileUseCase(networkService: netwokService)
     }
     diContainer.bind(service: GetAlbumsUseCaseProtocol.self, .transient) { albumUseCase in
-      GetAlbumsUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetAlbumsUseCase(networkService: netwokService)
     }
 
     diContainer.bind(service: GetPlaylistsUseCaseProtocol.self, .transient) { playlistUseCase in
-      GetPlaylistsUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetPlaylistsUseCase(networkService: netwokService)
     }
 
     diContainer.bind(service: GetSearchResultProtocol.self, .transient) { searchResultUseCase in
-      GetSearchResultUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetSearchResultUseCase(networkService: netwokService)
     }
 
     diContainer.bind(service: GetUserSavedTracksUseCaseProtocol.self, .transient) { getUserSavedTracksUseCase in
-      GetUserSavedTracksUseCase(networkService: netwokService)
+      let netwokService = diContainer.resolve(NetworkServiceProtocol.self)
+      return GetUserSavedTracksUseCase(networkService: netwokService)
     }
   }
 }
