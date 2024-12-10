@@ -11,11 +11,13 @@ struct HorizontalScrollViewUIModel {
   let description: String
   let tracks: [PlayListTrackItem]?
   let imageURL: URL?
+  let onTap: ((String) -> Void)?
 
-  init(response: PlayListDetailResponse) {
+  init(response: PlayListDetailResponse, onTap: ((String) -> Void)?) {
     self.title = response.name
     self.description = response.description
     self.tracks = response.tracks.items
     self.imageURL = response.images?.first?.imageURL
+    self.onTap = onTap
   }
 }
