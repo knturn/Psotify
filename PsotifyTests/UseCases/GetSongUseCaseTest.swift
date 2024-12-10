@@ -9,24 +9,20 @@ import XCTest
 @testable import Psotify
 
 final class GetSongUseCaseTests: BaseUseCaseTest {
-
-    private func makeSut(parsedObject: SongResponse?) -> (GetSongUseCase, MockNetworkService<SongResponse>) {
-        let mockNetworkService = MockNetworkService<SongResponse>(parsedObject: parsedObject)
-        return (GetSongUseCase(networkService: mockNetworkService), mockNetworkService)
-    }
-
     func test_fetchSong_successfulResponse_returnsSongResponse() async throws {
         // Given
         let expectedSongName = "Sample Song"
         let parsedSongResponse: SongResponse = try loadMockData(from: "SongResponse.json", type: SongResponse.self)
 
-        let (sut, spy) = makeSut(parsedObject: parsedSongResponse)
+        let (sut, mock) = createSUT(parsedObject: parsedSongResponse) { mock in
+          GetSongUseCase(networkService: mock)
+        }
 
         // When
         let result = try await sut.fetchSong(with: "song_id")
 
         // Then
-        XCTAssertTrue(spy.didMessageRecieved.contains(.success))
+        XCTAssertTrue(mock.recievedMessages.contains(.success))
         XCTAssertEqual(result.name, expectedSongName, "Expected song name to match")
     }
 
@@ -34,7 +30,9 @@ final class GetSongUseCaseTests: BaseUseCaseTest {
         // Given
         let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
 
-        let (sut, _) = makeSut(parsedObject: nil)
+      let (sut, _) = createSUT { mock in
+        GetSongUseCase(networkService: mock)
+      }
 
         // When & Then
         await XCTAssertThrowsErrorAsync(try await sut.fetchSong(with: "song_id")) { error in
@@ -46,25 +44,24 @@ final class GetSongUseCaseTests: BaseUseCaseTest {
 
   func test_fetchSong_invalidJSON_throwsParseError() async throws {
       // Given
-    // invalid response for type cast error test
       let invalidResponse = PsotifyTokenResponse(
           accessToken: "dummyToken",
           tokenType: "Bearer",
           expiresIn: 3600,
           refreshToken: "dummyRefreshToken"
       )
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: invalidResponse
-      )
-      let sut = GetSongUseCase(networkService: mockNetworkService)
+
+     let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in  // invalid response for type cast error test
+       GetSongUseCase(networkService: mock)
+     }
 
       // When & Then
       do {
           let _: SongResponse = try await sut.fetchSong(with: "id")
           XCTFail("Expected to throw an NSError but succeeded.")
-      } catch let error as NSError {
+      } catch _ as NSError {
           // Check that the error domain and code match
-        XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+        XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
       } catch {
           XCTFail("Expected NSError but received: \(error)")
       }

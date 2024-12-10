@@ -11,7 +11,7 @@ import Combine
 protocol AuthUseCaseProtocol {
     func logIn(with authCode: String) async throws
     func refreshToken() async throws
-    func checkLoginState() async throws
+    func refreshLoginState() async throws
     var loginPublisher: AnyPublisher<UserLoginState, Never> { get }
 }
 
@@ -79,7 +79,7 @@ final class AuthUseCase: AuthUseCaseProtocol {
       }
   }
 
-  func checkLoginState() async throws {
+  func refreshLoginState() async throws {
       // Retrieve the token model
       guard let tokenModel = getTokenModel(), tokenModel.refreshToken != nil else {
           // If there's no token or no refresh token, send logout state

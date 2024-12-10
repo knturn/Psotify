@@ -40,4 +40,17 @@ class BaseUseCaseTest: XCTestCase {
             headerFields: nil
         )!
     }
+
+  func createSUT<T: Codable, U>(
+      parsedObject: T? = nil as MockResponse?,
+      useCaseInitializer: (MockNetworkService<T>) -> U
+  ) -> (sut: U, mock: MockNetworkService<T>) {
+      let mock = MockNetworkService(parsedObject: parsedObject)
+      let sut = useCaseInitializer(mock)
+      return (sut, mock)
+  }
+}
+
+struct MockResponse: Codable {
+    let id: Int
 }

@@ -10,23 +10,20 @@ import XCTest
 
 final class GetUserProfileUseCaseTests: BaseUseCaseTest {
 
-  private func makeSut(parsedObject: SpotifyUserProfile?) -> (GetUserProfileUseCase, MockNetworkService<SpotifyUserProfile>) {
-    let mock = MockNetworkService<SpotifyUserProfile>(parsedObject: parsedObject)
-    return (GetUserProfileUseCase(networkService: mock), mock)
-  }
-
   func test_fetchUserInfo_successfulResponse_returnsUserProfile() async throws {
     // Given
     let expectedUsername = "John Doe"
     let parsedObject: SpotifyUserProfile = try loadMockData(from: "UserProfileResponse.json", type: SpotifyUserProfile.self)
 
-    let (sut, spy) = makeSut(parsedObject: parsedObject)
+    let (sut, mock) = createSUT(parsedObject: parsedObject) { mock in
+      GetUserProfileUseCase(networkService: mock)
+    }
 
     // When
     let result = try await sut.fetchUserInfo()
 
     // Then
-    XCTAssertTrue(spy.didMessageRecieved.contains(.success))
+    XCTAssertTrue(mock.recievedMessages.contains(.success))
     XCTAssertEqual(result.displayName, expectedUsername, "Expected username to match")
   }
 
@@ -34,11 +31,14 @@ final class GetUserProfileUseCaseTests: BaseUseCaseTest {
     // Given
     let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
 
-    let (sut, _) = makeSut(parsedObject: nil)
+    let (sut, mock) = createSUT { mock in
+      GetUserProfileUseCase(networkService: mock)
+    }
 
-    // When & Then
+    // When
     await XCTAssertThrowsErrorAsync(try await sut.fetchUserInfo()) { error in
       let nsError = error as NSError
+    // Then
       XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
       XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
     }
@@ -52,18 +52,17 @@ final class GetUserProfileUseCaseTests: BaseUseCaseTest {
       expiresIn: 3600,
       refreshToken: "dummyRefreshToken"
     )
-    let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-      parsedObject: invalidResponse
-    )
-    let sut = GetUserProfileUseCase(networkService: mockNetworkService)
+    let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+      GetUserProfileUseCase(networkService: mock)
+    }
 
-    // When & Then
+    // When
     do {
       let _: SpotifyUserProfile = try await sut.fetchUserInfo()
       XCTFail("Expected to throw an NSError but succeeded.")
-    } catch let error as NSError {
-      // Check that the error domain and code match
-      XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+    } catch _ as NSError {
+    // Then
+      XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
     } catch {
       XCTFail("Expected NSError but received: \(error)")
     }

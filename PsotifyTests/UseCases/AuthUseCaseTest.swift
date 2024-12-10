@@ -10,7 +10,7 @@ import Combine
 @testable import Psotify
 
 final class AuthUseCaseTests: XCTestCase {
-    func testLogInSuccess() async throws {
+    func test_logIn_success() async throws {
         // Given
       let tokenResponse = PsotifyTokenResponse(
           accessToken: "validAccessToken",
@@ -43,7 +43,7 @@ final class AuthUseCaseTests: XCTestCase {
         XCTAssertEqual(savedTokenModel?.accessToken, "validAccessToken")
     }
 
-  func testLogInFailure() async throws {
+  func test_logIn_failure() async throws {
       // Given
       let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
           parsedObject: nil,
@@ -66,11 +66,11 @@ final class AuthUseCaseTests: XCTestCase {
           XCTAssertEqual(error as? SpotifyAuthError, .invalidAuthCode)
       }
 
-      XCTAssertEqual(mockNetworkService.didMessageRecieved, [.returnWantedError])
+      XCTAssertEqual(mockNetworkService.recievedMessages, [.returnWantedError])
   }
 
 
-  func testRefreshTokenSuccess() async throws {
+  func test_refreshToken_success() async throws {
       // Given
       let tokenResponse = PsotifyTokenResponse(
           accessToken: "newAccessToken",
@@ -113,11 +113,11 @@ final class AuthUseCaseTests: XCTestCase {
       )
       XCTAssertNotNil(savedTokenModel)
       XCTAssertEqual(savedTokenModel?.accessToken, "newAccessToken")
-      XCTAssertEqual(mockNetworkService.didMessageRecieved, [.success])
+      XCTAssertEqual(mockNetworkService.recievedMessages, [.success])
   }
 
 
-  func testRefreshTokenFailure() async throws {
+  func test_refreshToken_failure() async throws {
       // Given
       let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
           parsedObject: nil,
@@ -140,7 +140,7 @@ final class AuthUseCaseTests: XCTestCase {
   }
 
 
-  func test_checkLoginState_whenTokenValid() async throws {
+  func test_refreshLoginState_whenTokenValid() async throws {
       // Given
       let tokenResponse = PsotifyTokenResponse(
           accessToken: "validAccessToken",
@@ -167,16 +167,16 @@ final class AuthUseCaseTests: XCTestCase {
       )
 
       // When
-      try await authUseCase.checkLoginState()
+      try await authUseCase.refreshLoginState()
 
       // Then
       let receivedState = await getStateFromPublisher(authUseCase.loginPublisher)
       XCTAssertEqual(receivedState, .login)
-      XCTAssertTrue(mockNetworkService.didMessageRecieved.isEmpty) // no need fetch request did not triggered
+      XCTAssertTrue(mockNetworkService.recievedMessages.isEmpty) // no need fetch request did not triggered
   }
 
 
-  func test_checkLoginState_whenTokenExpired() async throws {
+  func test_refreshLoginState_whenTokenExpired() async throws {
       // Given
       let tokenResponse = PsotifyTokenResponse(
           accessToken: "expiredAccessToken",
@@ -203,13 +203,13 @@ final class AuthUseCaseTests: XCTestCase {
       )
 
       // When
-      try await authUseCase.checkLoginState()
+      try await authUseCase.refreshLoginState()
 
       // Then
       let receivedState = await getStateFromPublisher(authUseCase.loginPublisher)
       XCTAssertEqual(receivedState, .logout)
 
-    XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+    XCTAssertTrue(mockNetworkService.recievedMessages.contains(.withParseError))
   }
 
 

@@ -13,28 +13,31 @@ final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
         // Given
         let expectedTrackAlbumID = "5JBOWYaxcyNzWuq3PewTMk"
         let mockUserTracksResponse: UserTracksResponse = try loadMockData(from: "UserTracksResponse.json", type: UserTracksResponse.self)
-        let mockMetworkService = MockNetworkService<UserTracksResponse>(parsedObject: mockUserTracksResponse)
 
-        let sut = GetUserSavedTracksUseCase(networkService: mockMetworkService)
+        let (sut, mock) = createSUT(parsedObject: mockUserTracksResponse) { mock in
+          GetUserSavedTracksUseCase(networkService: mock)
+        }
 
         // When
         let result = try await sut.fetchTopTracks()
 
         // Then
-        XCTAssertTrue(mockMetworkService.didMessageRecieved.contains(.success))
+        XCTAssertTrue(mock.recievedMessages.contains(.success))
         XCTAssertEqual(result.items.first?.track.album.id, expectedTrackAlbumID, "Expected track album id to match")
     }
 
     func test_fetchTopTracks_failure_throwsError() async {
         // Given
         let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
-        let mockMetworkService = MockNetworkService<UserTracksResponse>(parsedObject: nil)
 
-        let sut = GetUserSavedTracksUseCase(networkService: mockMetworkService)
+        let (sut, mock) = createSUT { mock in
+          GetUserSavedTracksUseCase(networkService: mock)
+        }
 
-        // When & Then
+        // When
         await XCTAssertThrowsErrorAsync(try await sut.fetchTopTracks()) { error in
             let nsError = error as NSError
+        // Then
             XCTAssertEqual(nsError.domain, expectedError.domain, "Expected error domain to match")
             XCTAssertEqual(nsError.code, expectedError.code, "Expected error code to match")
         }
@@ -49,18 +52,18 @@ final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
           expiresIn: 3600,
           refreshToken: "dummyRefreshToken"
       )
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: invalidResponse // Geçersiz yanıt (UserTracksResponse bekleniyor)
-      )
-      let sut = GetUserSavedTracksUseCase(networkService: mockNetworkService)
 
-      // When & Then
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in // Geçersiz yanıt (UserTracksResponse bekleniyor)
+        GetUserSavedTracksUseCase(networkService: mock)
+      }
+
+      // When
       do {
           let _: UserTracksResponse = try await sut.fetchTopTracks()
           XCTFail("Expected to throw an NSError but succeeded.")
       } catch let error as NSError {
-          // Check that the error domain and code match
-          XCTAssertTrue(mockNetworkService.didMessageRecieved.contains(.withParseError))
+        // Then
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
       } catch {
           XCTFail("Expected NSError but received: \(error)")
       }

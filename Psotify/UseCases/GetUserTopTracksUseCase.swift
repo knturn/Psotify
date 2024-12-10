@@ -10,7 +10,7 @@ protocol GetUserSavedTracksUseCaseProtocol {
   func fetchTopTracks() async throws -> UserTracksResponse
 }
 
-class GetUserSavedTracksUseCase: GetUserSavedTracksUseCaseProtocol {
+final class GetUserSavedTracksUseCase: GetUserSavedTracksUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {

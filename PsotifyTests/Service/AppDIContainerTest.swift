@@ -67,23 +67,4 @@ class AppDIContainerTests: XCTestCase {
         // Then: Both resolutions should return same instances because MockService is class so when you want to resolve service, It should give you same instance until die
         XCTAssertTrue(resolved1 as AnyObject === resolved2 as AnyObject, "Transient services should return the same instance.")
     }
-
-    // MARK: - Fatal Testing (Unregistered Service Resolution)
-   // When this case happen app terminated with fatal error. There for this func is in comment lines. Try comment out and tested for fatal error.
-//    func testUnregisteredServiceResolutionFails() {
-//        // Given: A container with no registered service for MockServiceProtocol
-//        let sutContainer = AppDIContainer.shared
-//
-//        // When: Attempting to resolve an unregistered service
-//
-//        // Then: A fatalError should be triggered
-//        sutContainer.bind(service: MockServiceProtocol.self, .singleton) { _ in MockService() }
-//
-//        // Use the XCTest framework's mechanism to check fatalError
-//        XCTAssertThrowsError({
-//            sutContainer.resolve(MockServiceProtocol.self)
-//        }(), "Resolving an unregistered service should trigger fatalError.")
-//
-//
-//    }
 }

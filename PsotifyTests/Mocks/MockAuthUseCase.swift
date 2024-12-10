@@ -18,7 +18,7 @@ final class MockAuthUseCase: AuthUseCaseProtocol {
     self.loginState = loginState
   }
 
-    func checkLoginState() async throws {
+    func refreshLoginState() async throws {
       // Not relevant for this test
     }
 

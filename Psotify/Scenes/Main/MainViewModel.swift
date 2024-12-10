@@ -33,7 +33,7 @@ final class MainViewModel: ObservableObject {
         Task { [weak self] in
             guard let self else { return }
             do {
-                try await authUseCase.checkLoginState()
+                try await authUseCase.refreshLoginState()
             } catch {
                 print(error.localizedDescription)
             }
