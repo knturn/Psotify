@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ResultsView: View {
+  @EnvironmentObject var nav: Navigation
   let searchedSongs: [TrackItem]
   let searchedAlbums: [AlbumItem]
   let showLabel: Bool
@@ -34,12 +35,15 @@ struct ResultsView: View {
           if !searchedSongs.isEmpty {
             SearchListSectionView(
               title: "Songs",
-              items: searchedSongs.map {
+              items: searchedSongs.map { song in
                 SearchListCellView(
-                  imageURL: $0.album?.images.first?.imageURL,
-                  title: $0.name ?? "Unknown Song",
-                  subtitle: $0.artists?.first?.name ?? "Unknown Artist",
-                  detailViewType: .playerView(with: .init(id: $0.id))
+                  imageURL: song.album?.images.first?.imageURL,
+                  title: song.name ?? "Unknown Song",
+                  subtitle: song.artists?.first?.name ?? "Unknown Artist",
+                  onTap: { [weak nav] in
+                    guard let nav = nav else { return }
+                    nav.navigate(to: .playerView(with: .init(id: song.id)))
+                  }
                 )
               }
             )
@@ -48,12 +52,16 @@ struct ResultsView: View {
           if !searchedAlbums.isEmpty {
             SearchListSectionView(
               title: "Albums",
-              items: searchedAlbums.map {
+              items: searchedAlbums.map { album in
                 SearchListCellView(
-                  imageURL: $0.images.first?.imageURL,
-                  title: $0.name,
-                  subtitle: $0.artists.first?.name ?? "Unknown Artist",
-                  detailViewType: .albumDetail(with: .init(id: $0.id))
+                  imageURL: album.images.first?.imageURL,
+                  title: album.name,
+                  subtitle: album.artists.first?.name ?? "Unknown Artist",
+                  onTap: { [weak nav] in
+                    guard let nav = nav else { return }
+                    nav.navigate(to: .albumDetail(with: .init(id: album.id)))
+                  }
+
                 )
               }
             )

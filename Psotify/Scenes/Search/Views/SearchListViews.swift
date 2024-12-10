@@ -31,7 +31,7 @@ struct SearchListCellView: View {
   let imageURL: URL?
   let title: String
   let subtitle: String
-  let detailViewType: Navigation.ViewType
+  let onTap: (() -> Void)?
 
   var body: some View {
     HStack {
@@ -70,7 +70,7 @@ struct SearchListCellView: View {
       Spacer()
     }
     .onTapGesture {
-      nav.navigate(to: detailViewType)
+      onTap?()
     }
     .padding(.vertical, 5)
     .background(Color.black)
