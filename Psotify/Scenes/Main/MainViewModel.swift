@@ -19,7 +19,7 @@ final class MainViewModel: ObservableObject {
     observeLoginState()
   }
 
-  func refrshLoginState() {
+  func refreshLoginState() {
     Task { [weak self] in
       guard let self else { return }
       do {
