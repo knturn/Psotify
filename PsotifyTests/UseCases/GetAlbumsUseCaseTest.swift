@@ -87,20 +87,17 @@ final class GetAlbumsUseCaseTests: BaseUseCaseTest {
           refreshToken: "dummyRefreshToken"
       )
 
-    let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in // Invalid response return for type casting test
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+          // Invalid response return for type casting test
           GetAlbumsUseCase(networkService: mock)
       }
 
-      // When & Then
-      do {
-          let _: Albums = try await sut.fetchNewReleases(limit: 10)
-          XCTFail("Expected to throw an NSError but succeeded.")
-      } catch _ as NSError {
-          // Check that the error domain and code match
-        XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
-      } catch {
-          XCTFail("Expected NSError but received: \(error)")
+      // When
+      await XCTAssertThrowsErrorAsync(
+          try await sut.fetchNewReleases(limit: 10)
+      ) { error in
+        // Then
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError), "Expected .withParseError message in mock")
       }
   }
-
 }

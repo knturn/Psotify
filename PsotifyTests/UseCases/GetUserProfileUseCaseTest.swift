@@ -45,27 +45,26 @@ final class GetUserProfileUseCaseTests: BaseUseCaseTest {
   }
 
   func test_fetchUserInfo_invalidJSON_throwsParseError() async throws {
-    // Given
-    let invalidResponse = PsotifyTokenResponse(
-      accessToken: "dummyToken",
-      tokenType: "Bearer",
-      expiresIn: 3600,
-      refreshToken: "dummyRefreshToken"
-    )
-    let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
-      GetUserProfileUseCase(networkService: mock)
-    }
+      // Given
+      let invalidResponse = PsotifyTokenResponse(
+          accessToken: "dummyToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "dummyRefreshToken"
+      )
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+          GetUserProfileUseCase(networkService: mock)
+      }
 
-    // When
-    do {
-      let _: SpotifyUserProfile = try await sut.fetchUserInfo()
-      XCTFail("Expected to throw an NSError but succeeded.")
-    } catch _ as NSError {
-    // Then
-      XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
-    } catch {
-      XCTFail("Expected NSError but received: \(error)")
-    }
+      // When
+      await XCTAssertThrowsErrorAsync(
+          try await sut.fetchUserInfo()
+      ) { error in
+
+      // Then
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError), "Expected .withParseError message in mock")
+      }
   }
+
 }
 

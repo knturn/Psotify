@@ -49,20 +49,16 @@ final class GetSearchResultUseCaseTests: BaseUseCaseTest {
           expiresIn: 3600,
           refreshToken: "dummyRefreshToken"
       )
-
-      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in // Invalid response to mock networkService for test typeCasting issues
-        GetSearchResultUseCase(networkService: mock)
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+          GetSearchResultUseCase(networkService: mock)
       }
 
-      // When & Then
-      do {
-        let _: SearchResponse = try await sut.fetchResult(with: "", for: ["query"])
-          XCTFail("Expected to throw an NSError but succeeded.")
-      } catch _ as NSError {
-          // Check that the error domain and code match
-        XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
-      } catch {
-          XCTFail("Expected NSError but received: \(error)")
+      // When 
+      await XCTAssertThrowsErrorAsync(
+          try await sut.fetchResult(with: "", for: ["query"])
+      ) { error in
+        // Then
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError), "Expected .withParseError message in mock")
       }
   }
 

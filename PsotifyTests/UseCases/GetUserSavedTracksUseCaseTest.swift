@@ -30,7 +30,7 @@ final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
         // Given
         let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
 
-        let (sut, mock) = createSUT { mock in
+        let (sut, _) = createSUT { mock in
           GetUserSavedTracksUseCase(networkService: mock)
         }
 
@@ -44,7 +44,6 @@ final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
     }
 
   func test_fetchTopTracks_invalidJSON_throwsParseError() async throws {
-    // Invalid response to mock networkService for test typeCasting issues
       // Given
       let invalidResponse = PsotifyTokenResponse(
           accessToken: "dummyToken",
@@ -53,20 +52,16 @@ final class GetUserSavedTracksUseCaseTests: BaseUseCaseTest {
           refreshToken: "dummyRefreshToken"
       )
 
-      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in // Geçersiz yanıt (UserTracksResponse bekleniyor)
-        GetUserSavedTracksUseCase(networkService: mock)
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+          GetUserSavedTracksUseCase(networkService: mock)
       }
 
       // When
-      do {
-          let _: UserTracksResponse = try await sut.fetchTopTracks()
-          XCTFail("Expected to throw an NSError but succeeded.")
-      } catch let error as NSError {
+      await XCTAssertThrowsErrorAsync(
+          try await sut.fetchTopTracks()
+      ) { error in
         // Then
-          XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
-      } catch {
-          XCTFail("Expected NSError but received: \(error)")
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError), "Expected .withParseError message in mock")
       }
   }
-
 }

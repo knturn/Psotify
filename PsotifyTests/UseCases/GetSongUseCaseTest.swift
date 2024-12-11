@@ -51,21 +51,17 @@ final class GetSongUseCaseTests: BaseUseCaseTest {
           refreshToken: "dummyRefreshToken"
       )
 
-     let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in  // invalid response for type cast error test
-       GetSongUseCase(networkService: mock)
-     }
+      let (sut, mock) = createSUT(parsedObject: invalidResponse) { mock in
+          GetSongUseCase(networkService: mock)
+      }
 
-      // When & Then
-      do {
-          let _: SongResponse = try await sut.fetchSong(with: "id")
-          XCTFail("Expected to throw an NSError but succeeded.")
-      } catch _ as NSError {
-          // Check that the error domain and code match
-        XCTAssertTrue(mock.recievedMessages.contains(.withParseError))
-      } catch {
-          XCTFail("Expected NSError but received: \(error)")
+      // When
+      await XCTAssertThrowsErrorAsync(
+          try await sut.fetchSong(with: "id")
+      ) { error in
+        // Then
+          XCTAssertTrue(mock.recievedMessages.contains(.withParseError), "Expected .withParseError message in mock")
       }
   }
-
 }
 
