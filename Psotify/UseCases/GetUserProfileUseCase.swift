@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 protocol GetUserProfileUseCaseProtocol {
   func fetchUserInfo() async throws -> SpotifyUserProfile
 }

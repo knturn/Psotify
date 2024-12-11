@@ -16,15 +16,14 @@ protocol AuthUseCaseProtocol {
 }
 
 final class AuthUseCase: AuthUseCaseProtocol {
+  var loginPublisher: AnyPublisher<UserLoginState, Never>  {
+      loginState.eraseToAnyPublisher()
+  }
+
     private let networkService: NetworkServiceProtocol
     private let keychainService: KeyChainServiceProtocol
     private let userDefaultsService: UserDefaultsServiceProtocol
-
     private let loginState: CurrentValueSubject<UserLoginState, Never>
-    
-    var loginPublisher: AnyPublisher<UserLoginState, Never>  {
-        loginState.eraseToAnyPublisher()
-    }
 
   init(networkService: NetworkServiceProtocol,
          keychainService: KeyChainServiceProtocol = AppDIContainer.shared.resolve(KeyChainServiceProtocol.self),
@@ -103,33 +102,18 @@ final class AuthUseCase: AuthUseCaseProtocol {
       // If the token is valid and not expired, send login state
       loginState.send(.login)
   }
-
-  private func handleTokenRefresh() async throws {
-      do {
-          try await refreshToken()
-          loginState.send(.login)
-      } catch {
-          loginState.send(.logout)
-      }
-  }
-
-  private func hasValidAuthCodeAndToken() -> Bool {
-      let hasAuthCode = keychainService.get(key: KeychainServiceKeys.authCode.rawValue) != nil
-      let hasTokenModel = getTokenModel() != nil
-      return hasAuthCode && hasTokenModel
-  }
 }
 
 
 // MARK: - Private Methods
 extension AuthUseCase {
-    private func saveAuthCode(_ authCode: String) throws {
+  private func saveAuthCode(_ authCode: String) throws {
         guard let authCodeData = authCode.data(using: .utf8) else {
             throw SpotifyAuthError.invalidAuthCode
         }
       keychainService.remove(key: KeychainServiceKeys.authCode.rawValue)
         try keychainService.save(key: KeychainServiceKeys.authCode.rawValue, data: authCodeData)
-    }
+  }
     
   private func fetchToken() async throws {
       guard let authCode = keychainService.get(key: KeychainServiceKeys.authCode.rawValue)?.toString() else {
@@ -157,4 +141,12 @@ extension AuthUseCase {
       )
   }
 
+  private func handleTokenRefresh() async throws {
+      do {
+          try await refreshToken()
+          loginState.send(.login)
+      } catch {
+          loginState.send(.logout)
+      }
+  }
 }
