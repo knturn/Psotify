@@ -9,7 +9,7 @@ import Foundation
 protocol GetSongUseCaseProtocol {
   func fetchSong(with id: String) async throws -> SongResponse
 }
-struct GetSongUseCase: GetSongUseCaseProtocol {
+final class GetSongUseCase: GetSongUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {

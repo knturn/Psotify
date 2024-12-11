@@ -7,9 +7,14 @@
 
 import Security
 import Foundation
+protocol KeyChainServiceProtocol {
+    func save(key: String, data: Data) throws
+    func get(key: String) -> Data?
+    func remove(key: String)
+}
 
-class KeyChainService {
-    static func save(key: String, data: Data) throws {
+class KeyChainService: KeyChainServiceProtocol {
+    func save(key: String, data: Data) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword as String,
             kSecAttrAccount as String: key,
@@ -19,7 +24,7 @@ class KeyChainService {
         guard status == errSecSuccess else {throw KeyChainError.unknown(status)}
     }
     
-    static func remove(key: String) {
+     func remove(key: String) {
         let query = [kSecClass as String: kSecClassGenericPassword,
                      kSecAttrAccount as String: key] as [String: Any]
         
@@ -33,7 +38,7 @@ class KeyChainService {
             return}
     }
     
-    static func get(key: String) -> Data? {
+     func get(key: String) -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,

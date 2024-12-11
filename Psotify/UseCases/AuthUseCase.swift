@@ -11,22 +11,29 @@ import Combine
 protocol AuthUseCaseProtocol {
     func logIn(with authCode: String) async throws
     func refreshToken() async throws
-    func checkLoginState() async throws
+    func refreshLoginState() async throws
     var loginPublisher: AnyPublisher<UserLoginState, Never> { get }
 }
 
 final class AuthUseCase: AuthUseCaseProtocol {
     private let networkService: NetworkServiceProtocol
-    
-    private let loginStatePublisher: CurrentValueSubject<UserLoginState, Never>
+    private let keychainService: KeyChainServiceProtocol
+    private let userDefaultsService: UserDefaultsServiceProtocol
+
+    private let loginState: CurrentValueSubject<UserLoginState, Never>
     
     var loginPublisher: AnyPublisher<UserLoginState, Never>  {
-        loginStatePublisher.eraseToAnyPublisher()
+        loginState.eraseToAnyPublisher()
     }
-    
-    init(networkService: NetworkServiceProtocol, loginStatePublisher: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
+
+  init(networkService: NetworkServiceProtocol,
+         keychainService: KeyChainServiceProtocol = AppDIContainer.shared.resolve(KeyChainServiceProtocol.self),
+       userDefaultsService: UserDefaultsServiceProtocol = UserDefaultsService.shared,
+         loginState: CurrentValueSubject<UserLoginState, Never> = CurrentValueSubject<UserLoginState, Never>(.inProgress)) {
         self.networkService = networkService
-        self.loginStatePublisher = loginStatePublisher
+        self.keychainService = keychainService
+        self.userDefaultsService = userDefaultsService
+        self.loginState = loginState
     }
 
     func logIn(with authCode: String) async throws {
@@ -38,63 +45,76 @@ final class AuthUseCase: AuthUseCaseProtocol {
             try await fetchToken()
             
             // 3. Login successful
-            loginStatePublisher.send(.login)
+            loginState.send(.login)
         } catch {
             // Handle login failure and set state to logout
-            loginStatePublisher.send(.logout)
+            loginState.send(.logout)
             throw SpotifyAuthError.invalidAuthCode
         }
     }
     
-    func refreshToken() async throws {
-        let model = UserDefaultsService.getElement(forKey:  UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self)
-        do {
-            guard let refreshToken = model?.refreshToken else {
-                throw SpotifyAuthError.tokenUnavailable
-            }
-            
-            guard let request = PsotifyEndpoint.refreshToken(refreshToken: refreshToken).request else {
-                throw SpotifyAuthError.tokenUnavailable
-            }
-            
-            let tokenResponse: PsotifyTokenResponse = try await networkService.fetch(request: request)
-          try await UserDefaultsService.saveElement(model: tokenResponse.self, forKey: UserDefaultsServiceKeys.tokenStorage.rawValue)
-            loginStatePublisher.send(.login)
-        } catch {
-            throw SpotifyAuthError.tokenUnavailable
-        }
-    }
-    
-  func checkLoginState() async throws {
+  func refreshToken() async throws {
+      let model = getTokenModel()
       do {
-          if isTokenExpired() {
-              try await handleTokenRefresh()
-              return
+          guard let refreshToken = model?.refreshToken else {
+              throw SpotifyAuthError.tokenUnavailable
           }
 
-          if hasValidAuthCodeAndToken() {
-              try await fetchToken()
-              loginStatePublisher.send(.login)
-          } else {
-              loginStatePublisher.send(.logout)
+          guard let request = PsotifyEndpoint.refreshToken(refreshToken: refreshToken).request else {
+              throw SpotifyAuthError.tokenUnavailable
           }
+
+          let tokenResponse: PsotifyTokenResponse = try await networkService.fetch(request: request)
+      
+          let tokenStorage: PsotifyTokenStorageModel = .init(response: tokenResponse)
+
+          try await userDefaultsService.saveElement(
+              defaults: .standard,
+              model: tokenStorage,
+              forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
+          )
+          loginState.send(.login)
       } catch {
-        loginStatePublisher.send(.logout)
-          throw error
+          throw SpotifyAuthError.tokenUnavailable
       }
+  }
+
+  func refreshLoginState() async throws {
+      // Retrieve the token model
+      guard let tokenModel = getTokenModel(), tokenModel.refreshToken != nil else {
+          // If there's no token or no refresh token, send logout state
+          loginState.send(.logout)
+          return
+      }
+
+      // Check if the token is expired
+      if Date() >= tokenModel.expireDate {
+          do {
+              // If expired, try to refresh the token
+              try await handleTokenRefresh()
+          } catch {
+              // If refreshing the token fails, send logout state
+              loginState.send(.logout)
+              throw error
+          }
+          return
+      }
+
+      // If the token is valid and not expired, send login state
+      loginState.send(.login)
   }
 
   private func handleTokenRefresh() async throws {
       do {
           try await refreshToken()
-          loginStatePublisher.send(.login)
+          loginState.send(.login)
       } catch {
-          loginStatePublisher.send(.logout)
+          loginState.send(.logout)
       }
   }
 
   private func hasValidAuthCodeAndToken() -> Bool {
-      let hasAuthCode = KeyChainService.get(key: KeychainServiceKeys.authCode.rawValue) != nil
+      let hasAuthCode = keychainService.get(key: KeychainServiceKeys.authCode.rawValue) != nil
       let hasTokenModel = getTokenModel() != nil
       return hasAuthCode && hasTokenModel
   }
@@ -107,32 +127,34 @@ extension AuthUseCase {
         guard let authCodeData = authCode.data(using: .utf8) else {
             throw SpotifyAuthError.invalidAuthCode
         }
-            KeyChainService.remove(key: KeychainServiceKeys.authCode.rawValue)
-        try KeyChainService.save(key: KeychainServiceKeys.authCode.rawValue, data: authCodeData)
+      keychainService.remove(key: KeychainServiceKeys.authCode.rawValue)
+        try keychainService.save(key: KeychainServiceKeys.authCode.rawValue, data: authCodeData)
     }
     
-    private func fetchToken() async throws {
-        guard let authCode = KeyChainService.get(key: KeychainServiceKeys.authCode.rawValue)?.toString() else {
-            throw SpotifyAuthError.tokenUnavailable
-        }
-        
-        guard let request = PsotifyEndpoint.token(code: authCode).request else {
-            throw SpotifyAuthError.tokenUnavailable
-        }
-        
-        let tokenResponse: PsotifyTokenResponse = try await networkService.fetch(request: request)
-        let tokenStorage : PsotifyTokenStorageModel = .init(response: tokenResponse)
-      try await UserDefaultsService.saveElement(model: tokenStorage.self, forKey: UserDefaultsServiceKeys.tokenStorage.rawValue)
-    }
+  private func fetchToken() async throws {
+      guard let authCode = keychainService.get(key: KeychainServiceKeys.authCode.rawValue)?.toString() else {
+          throw SpotifyAuthError.tokenUnavailable
+      }
+
+      guard let request = PsotifyEndpoint.token(code: authCode).request else {
+          throw SpotifyAuthError.tokenUnavailable
+      }
+
+      let tokenResponse: PsotifyTokenResponse = try await networkService.fetch(request: request)
+      let tokenStorage: PsotifyTokenStorageModel = .init(response: tokenResponse)
+      try await userDefaultsService.saveElement(
+          defaults: .standard,
+          model: tokenStorage,
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
+      )
+  }
     
-    private func isTokenExpired() -> Bool {
-        guard let tokenModel = self.getTokenModel(),
-              tokenModel.refreshToken != nil else { return false }
-        return Date() >= tokenModel.expireDate
-    }
-    
-    private  func getTokenModel() -> PsotifyTokenStorageModel? {
-      guard let model = UserDefaultsService.getElement(forKey: UserDefaultsServiceKeys.tokenStorage.rawValue, type: PsotifyTokenStorageModel.self) else {return nil}
-        return model
-    }
+  private func getTokenModel() -> PsotifyTokenStorageModel? {
+      return userDefaultsService.getElement(
+          defaults: .standard,
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue,
+          type: PsotifyTokenStorageModel.self
+      )
+  }
+
 }

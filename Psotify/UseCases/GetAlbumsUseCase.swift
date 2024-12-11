@@ -10,7 +10,7 @@ protocol GetAlbumsUseCaseProtocol {
   func fetchNewReleases(limit: Int) async throws -> Albums
   func fetchOneAlbum(with id: String) async throws -> AlbumItem
 }
-struct GetAlbumsUseCase: GetAlbumsUseCaseProtocol {
+final class GetAlbumsUseCase: GetAlbumsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {

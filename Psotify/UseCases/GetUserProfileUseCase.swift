@@ -10,7 +10,7 @@ protocol GetUserProfileUseCaseProtocol {
   func fetchUserInfo() async throws -> SpotifyUserProfile
 }
 
-struct GetUserProfileUseCase: GetUserProfileUseCaseProtocol {
+final class GetUserProfileUseCase: GetUserProfileUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
   init(networkService: NetworkServiceProtocol) {

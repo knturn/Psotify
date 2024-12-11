@@ -8,85 +8,90 @@
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var nav: Navigation
-    @StateObject private var viewModel: HomeViewModel
+  @EnvironmentObject var nav: Navigation
+  @StateObject private var viewModel: HomeViewModel
 
-    init(viewModel: HomeViewModel = .init()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
+  init(viewModel: HomeViewModel = .init()) {
+    _viewModel = StateObject(wrappedValue: viewModel)
+  }
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            headerView
-                .padding(.horizontal)
-                .padding(.top, 16)
+  var body: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      headerView
+        .padding(.horizontal)
+        .padding(.top, 16)
 
-            ScrollView {
-                switch viewModel.screenState {
-                case .isLoading:
-                    placeholder
-                case .loaded:
-                    contentView
-                        .padding(.horizontal)
-                case .error(let message):
-                    ErrorView(message: message)
-                }
-            }
+      ScrollView {
+        switch viewModel.screenState {
+        case .isLoading:
+          placeholder
+        case .loaded:
+          contentView
+            .padding(.horizontal)
+        case .error(let message):
+          ErrorView(message: message)
         }
-        .task {
-            viewModel.fetch()
-        }
-        .background(.spotifyMediumGray)
+      }
     }
-
-    private var headerView: some View {
-        HStack {
-            Text("Merhaba " + (viewModel.userModel?.displayName ?? ""))
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-
-            Spacer()
-
-            Button(action: {
-                nav.navigate(to: .userDetail(with: viewModel.userModel))
-            }) {
-                Image(systemName: "person.fill")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            }
-        }
+    .task {
+      viewModel.fetch()
     }
+    .background(.spotifyMediumGray)
+  }
 
-    private var placeholder: some View {
-        SkeletonPlaceHolderView() {
-            VStack(spacing: 8) {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(height: 120)
+  private var headerView: some View {
+    HStack {
+      Text("Merhaba " + (viewModel.userModel?.displayName ?? ""))
+        .font(.title)
+        .fontWeight(.bold)
+        .foregroundStyle(.white)
 
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(height: 16)
+      Spacer()
 
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 80, height: 16)
-            }
-        }
+      Button(action: {
+        nav.navigate(to: .userDetail(with: viewModel.userModel))
+      }) {
+        Image(systemName: "person.fill")
+          .font(.title2)
+          .foregroundColor(.white)
+      }
     }
+  }
 
-    private var contentView: some View {
-        LazyVStack(spacing: 32) {
-            SectionView(
-                sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
-            )
-            ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
-                HorizontalScrollableView(model: viewModel.createHorizontalScrollUIModel(item.id))
-                    .onAppear {
-                        viewModel.fetchPlaylist(for: item.id)
-                    }
-            }
-        }
+  private var placeholder: some View {
+    SkeletonPlaceHolderView() {
+      VStack(spacing: 8) {
+        RoundedRectangle(cornerRadius: 8)
+          .fill(Color.gray.opacity(0.3))
+          .frame(height: 120)
+
+        RoundedRectangle(cornerRadius: 4)
+          .fill(Color.gray.opacity(0.3))
+          .frame(height: 16)
+
+        RoundedRectangle(cornerRadius: 4)
+          .fill(Color.gray.opacity(0.3))
+          .frame(width: 80, height: 16)
+      }
     }
+  }
+
+  private var contentView: some View {
+    LazyVStack(spacing: 32) {
+      SectionView(
+        sectionGridViewUIModel: .init(title: "HOT Albums", gridItems: viewModel.newReleases)
+      )
+      ForEach(viewModel.featuredPlayList ?? [], id: \.id) { item in
+        let uiModel = viewModel.createHorizontalScrollViewUIModel(for: item.id) { id in
+          nav.navigate(to: .playerView(with: .init(id: id)))
+        }
+
+        HorizontalScrollableView(model: uiModel)
+          .onAppear { [weak viewModel] in
+            guard let viewModel else { return }
+            viewModel.fetchPlaylist(for: item.id)
+          }
+      }
+    }
+  }
 }

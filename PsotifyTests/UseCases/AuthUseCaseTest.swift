@@ -1,0 +1,217 @@
+//
+//  AuthUseCaseTest.swift
+//  PsotifyTests
+//
+//  Created by Turan, Kaan on 6.12.2024.
+//
+
+import XCTest
+import Combine
+@testable import Psotify
+
+final class AuthUseCaseTests: XCTestCase {
+
+  private func createSUTWithMocks(
+      tokenResponse: PsotifyTokenResponse? = nil,
+      errorToThrow: Error? = nil
+  ) -> (
+      authUseCase: AuthUseCase,
+      mockNetworkService: MockNetworkService<PsotifyTokenResponse>,
+      mockKeychainService: MockKeyChainService,
+      mockUserDefaultsService: MockUserDefaultsService
+  ) {
+      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(parsedObject: tokenResponse, errorToThrow: errorToThrow)
+      let mockKeychainService = MockKeyChainService()
+      let mockUserDefaultsService = MockUserDefaultsService()
+      let authUseCase = AuthUseCase(
+          networkService: mockNetworkService,
+          keychainService: mockKeychainService,
+          userDefaultsService: mockUserDefaultsService
+      )
+      return (authUseCase, mockNetworkService, mockKeychainService, mockUserDefaultsService)
+  }
+
+  func test_logIn_success() async throws {
+      // Given
+      let tokenResponse = PsotifyTokenResponse(
+          accessToken: "validAccessToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "validRefreshToken"
+      )
+      let (sut, _, mockKeychainService, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
+      let authCode = "validAuthCode"
+
+      // When
+      try await sut.logIn(with: authCode)
+
+      // Then
+      XCTAssertEqual(mockKeychainService.savedData[KeychainServiceKeys.authCode.rawValue], authCode.data(using: .utf8))
+      let savedTokenModel: PsotifyTokenStorageModel? = mockUserDefaultsService.getElement(
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue,
+          type: PsotifyTokenStorageModel.self
+      )
+      XCTAssertNotNil(savedTokenModel)
+      XCTAssertEqual(savedTokenModel?.accessToken, "validAccessToken")
+  }
+
+
+  func test_logIn_failure() async throws {
+      // Given
+      let (sut, mockNetworkService, _, _) = createSUTWithMocks(errorToThrow: SpotifyAuthError.invalidAuthCode)
+      let authCode = "invalidAuthCode"
+
+      // When/Then
+      await XCTAssertThrowsErrorAsync(
+          try await sut.logIn(with: authCode)
+      ) { error in
+          XCTAssertEqual(error as? SpotifyAuthError, .invalidAuthCode)
+      }
+
+      XCTAssertEqual(mockNetworkService.recievedMessages, [.returnWantedError])
+  }
+
+
+  func test_refreshToken_success() async throws {
+      // Given
+      let tokenResponse = PsotifyTokenResponse(
+          accessToken: "newAccessToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "validRefreshToken"
+      )
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
+
+      let tokenStorageModel = PsotifyTokenStorageModel(
+          response: .init(
+              accessToken: "oldAccessToken",
+              tokenType: "Bearer",
+              expiresIn: -3600, // Token expired
+              refreshToken: "validRefreshToken"
+          )
+      )
+
+      try await mockUserDefaultsService.saveElement(
+          model: tokenStorageModel,
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
+      )
+
+      // When
+      try await sut.refreshToken()
+
+      // Then
+      let savedTokenModel: PsotifyTokenStorageModel? = mockUserDefaultsService.getElement(
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue,
+          type: PsotifyTokenStorageModel.self
+      )
+      XCTAssertNotNil(savedTokenModel)
+      XCTAssertEqual(savedTokenModel?.accessToken, "newAccessToken")
+      XCTAssertEqual(mockNetworkService.recievedMessages, [.success])
+  }
+
+
+
+  func test_refreshToken_failure() async throws {
+      // Given
+      let (sut, _, _, _) = createSUTWithMocks()
+
+      // When
+      await XCTAssertThrowsErrorAsync(
+          try await sut.refreshToken()
+      ) { error in
+      // Then
+          XCTAssertEqual(error as? SpotifyAuthError, .tokenUnavailable)
+      }
+  }
+
+
+  func test_refreshLoginState_whenTokenValid() async throws {
+      // Given
+      let tokenResponse = PsotifyTokenResponse(
+          accessToken: "validAccessToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "validRefreshToken"
+      )
+
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
+
+      let tokenStorage = PsotifyTokenStorageModel(response: tokenResponse)
+
+      try await mockUserDefaultsService.saveElement(
+          model: tokenStorage,
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
+      )
+
+      // When
+      try await sut.refreshLoginState()
+
+      // Then
+      let receivedState = await getStateFromPublisher(sut.loginPublisher)
+      XCTAssertEqual(receivedState, .login)
+      XCTAssertTrue(mockNetworkService.recievedMessages.isEmpty) // no need fetch request did not triggered
+  }
+
+
+  func test_refreshLoginState_whenTokenExpired() async throws {
+      // Given
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks()
+
+      let expiredTokenStorage = PsotifyTokenStorageModel(response: .init(accessToken: "expiredAccessToken", tokenType: "Bearer", expiresIn:  -3600, refreshToken: "validRefreshToken"))
+
+      try await mockUserDefaultsService.saveElement(
+          model: expiredTokenStorage,
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue
+      )
+
+      // When
+      try await sut.refreshLoginState()
+
+      // Then
+      let receivedState = await getStateFromPublisher(sut.loginPublisher)
+      XCTAssertEqual(receivedState, .logout)
+
+    XCTAssertTrue(mockNetworkService.recievedMessages.contains(.withParseError))
+  }
+
+    // Helper to retrieve the latest state from a Combine publisher
+    private func getStateFromPublisher(_ publisher: AnyPublisher<UserLoginState, Never>) async -> UserLoginState {
+       var cancellables: Set<AnyCancellable> = []
+       return await withCheckedContinuation { continuation in
+            publisher
+                .sink { state in
+                    continuation.resume(returning: state)
+                }
+                .store(in: &cancellables)
+        }
+    }
+}
+
+ extension SpotifyAuthError: Equatable {
+   public static func ==(lhs: SpotifyAuthError, rhs: SpotifyAuthError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidClientID, .invalidClientID),
+             (.invalidClientSecret, .invalidClientSecret),
+             (.invalidAuthCode, .invalidAuthCode),
+             (.invalidRedirectURI, .invalidRedirectURI),
+             (.tokenUnavailable, .tokenUnavailable),
+             (.refreshTokenExpired, .refreshTokenExpired):
+            return true
+
+        case (.tokenFetchError(let lhsError), .tokenFetchError(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+
+        case (.networkError(let lhsError), .networkError(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+
+        case (.serverError(let lhsStatusCode, let lhsMessage), .serverError(let rhsStatusCode, let rhsMessage)):
+            return lhsStatusCode == rhsStatusCode && lhsMessage == rhsMessage
+
+        case (.invalidRequest(let lhsMessage), .invalidRequest(let rhsMessage)):
+            return lhsMessage == rhsMessage
+
+        default:
+            return false
+        }
+    }
+}

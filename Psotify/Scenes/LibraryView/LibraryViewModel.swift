@@ -8,11 +8,11 @@
 import SwiftUI
 
 class LibraryViewModel: ObservableObject {
-    private let getUserTopTracksUseCase: GetUserTopTracksUseCaseProtocol
+    private let getUserTopTracksUseCase: GetUserSavedTracksUseCaseProtocol
     @Published var tracks: UserTracksResponse?
     @Published var screenState: ScreenState = .isLoading
 
-    init(getUserTopTracksUseCase: GetUserTopTracksUseCaseProtocol = AppDIContainer.shared.resolve(GetUserTopTracksUseCaseProtocol.self)) {
+    init(getUserTopTracksUseCase: GetUserSavedTracksUseCaseProtocol = AppDIContainer.shared.resolve(GetUserSavedTracksUseCaseProtocol.self)) {
         self.getUserTopTracksUseCase = getUserTopTracksUseCase
     }
 
