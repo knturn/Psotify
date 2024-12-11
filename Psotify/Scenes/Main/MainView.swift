@@ -25,7 +25,7 @@ struct MainView: View {
       case .inProgress:
         LaunchView()
           .task {
-            viewModel.checkLoginState()
+            viewModel.refrshLoginState()
           }
       }
     }

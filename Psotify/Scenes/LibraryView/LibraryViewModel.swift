@@ -8,9 +8,10 @@
 import SwiftUI
 
 class LibraryViewModel: ObservableObject {
-    private let getUserTopTracksUseCase: GetUserSavedTracksUseCaseProtocol
     @Published var tracks: UserTracksResponse?
     @Published var screenState: ScreenState = .isLoading
+
+    private let getUserTopTracksUseCase: GetUserSavedTracksUseCaseProtocol
 
     init(getUserTopTracksUseCase: GetUserSavedTracksUseCaseProtocol = AppDIContainer.shared.resolve(GetUserSavedTracksUseCaseProtocol.self)) {
         self.getUserTopTracksUseCase = getUserTopTracksUseCase
@@ -30,7 +31,10 @@ class LibraryViewModel: ObservableObject {
             }
         }
     }
+}
 
+// MARK: Helper extension
+extension LibraryViewModel {
   func getTrackItems() -> [UserTrackItem]? {
     self.tracks?.items
   }

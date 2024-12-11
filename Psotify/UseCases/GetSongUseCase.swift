@@ -6,9 +6,11 @@
 //
 
 import Foundation
+
 protocol GetSongUseCaseProtocol {
   func fetchSong(with id: String) async throws -> SongResponse
 }
+
 final class GetSongUseCase: GetSongUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 

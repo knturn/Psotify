@@ -44,9 +44,9 @@ private extension PlayerView {
     var headerView: some View {
         ZStack {
             HStack {
-                ModifiedButtonView(image: "arrow.left")
+                PlayerControlButtonView(image: "arrow.left")
                 Spacer()
-                ModifiedButtonView(image: "line.horizontal.3.decrease")
+                PlayerControlButtonView(image: "line.horizontal.3.decrease")
             }
 
             Text("Now Playing")
@@ -117,14 +117,14 @@ private extension PlayerView {
 
     var controlButtons: some View {
         HStack(spacing: 20) {
-            ModifiedButtonView(image: "backward.fill")
+            PlayerControlButtonView(image: "backward.fill")
 
             playPauseButtonContent
                 .onTapGesture {
                     togglePlayPause()
                 }
 
-            ModifiedButtonView(image: "forward.fill")
+            PlayerControlButtonView(image: "forward.fill")
         }
         .padding(.top, 25)
     }

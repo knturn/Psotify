@@ -1,5 +1,5 @@
 //
-//  ModifiedButtonView.swift
+//  PlayerControlButtonView.swift
 //  Psotify
 //
 //  Created by Turan, Kaan on 1.12.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ModifiedButtonView: View {
+struct PlayerControlButtonView: View {
     var image: String
 
     var body: some View {
