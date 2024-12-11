@@ -6,10 +6,12 @@
 //
 
 import Foundation
+
 protocol GetPlaylistsUseCaseProtocol {
   func fetchPlaylist(with id: String) async throws -> PlayListDetailResponse?
   func fetchUserPlaylist() async throws -> [PlaylistItem]?
 }
+
 final class GetPlaylistsUseCase: GetPlaylistsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 

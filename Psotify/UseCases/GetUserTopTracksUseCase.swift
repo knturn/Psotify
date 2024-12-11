@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 protocol GetUserSavedTracksUseCaseProtocol {
   func fetchTopTracks() async throws -> UserTracksResponse
 }

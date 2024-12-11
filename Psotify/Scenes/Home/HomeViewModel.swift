@@ -8,15 +8,15 @@
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-    private let getUserProfileUseCase: GetUserProfileUseCaseProtocol
-    private let getAlbumsUseCase: GetAlbumsUseCaseProtocol
-    private let getPlaylistUseCase: GetPlaylistsUseCaseProtocol
-
     @Published var newReleases: [AlbumItem]?
     @Published var userModel: SpotifyUserProfile?
     @Published var featuredPlayList: [PlaylistItem]?
     @Published var playlistModels: [String: PlayListDetailResponse] = [:]
     @Published var screenState: ScreenState = .isLoading
+
+    private let getUserProfileUseCase: GetUserProfileUseCaseProtocol
+    private let getAlbumsUseCase: GetAlbumsUseCaseProtocol
+    private let getPlaylistUseCase: GetPlaylistsUseCaseProtocol
 
     init(
         getUserProfileUseCase: GetUserProfileUseCaseProtocol = AppDIContainer.shared.resolve(GetUserProfileUseCaseProtocol.self),
@@ -38,39 +38,6 @@ final class HomeViewModel: ObservableObject {
     }
 
     @MainActor
-    private func fetchUserProfile() async {
-        do {
-            let userModel = try await getUserProfileUseCase.fetchUserInfo()
-            self.userModel = userModel
-            self.updateScreenStateIfNeeded()
-        } catch {
-            self.screenState = .error("Kullanıcı bilgileri alınırken hata oluştu.")
-        }
-    }
-
-    @MainActor
-    private func fetchNewReleases() async {
-        do {
-            let albums = try await getAlbumsUseCase.fetchNewReleases(limit: 6)
-            self.newReleases = albums.items
-            self.updateScreenStateIfNeeded()
-        } catch {
-            self.screenState = .error("Yeni albümler alınırken hata oluştu.")
-        }
-    }
-
-    @MainActor
-    private func fetchUserPlaylists() async {
-        do {
-            let playlists = try await getPlaylistUseCase.fetchUserPlaylist()
-            self.featuredPlayList = playlists
-            self.updateScreenStateIfNeeded()
-        } catch {
-            self.screenState = .error("Çalma listeleri alınırken hata oluştu.")
-        }
-    }
-
-    @MainActor
     func fetchPlaylist(for id: String) {
         Task { [weak self] in
             guard let self else { return }
@@ -82,21 +49,60 @@ final class HomeViewModel: ObservableObject {
             }
         }
     }
+}
 
-    func createHorizontalScrollViewUIModel(for playlistID: String, onTap: @escaping (String) -> Void) -> HorizontalScrollViewUIModel? {
-        guard let playlistModel = getPlaylistModel(playlistID) else {
-            return nil
-        }
-        return HorizontalScrollViewUIModel(response: playlistModel, onTap: onTap)
-    }
+//MARK: Private Funcs
+extension HomeViewModel {
+  @MainActor
+  private func fetchUserProfile() async {
+      do {
+          let userModel = try await getUserProfileUseCase.fetchUserInfo()
+          self.userModel = userModel
+          self.updateScreenStateIfNeeded()
+      } catch {
+          self.screenState = .error("Kullanıcı bilgileri alınırken hata oluştu.")
+      }
+  }
 
-    func getPlaylistModel(_ id: String) -> PlayListDetailResponse? {
-        return playlistModels[id]
-    }
+  @MainActor
+  private func fetchNewReleases() async {
+      do {
+          let albums = try await getAlbumsUseCase.fetchNewReleases(limit: 6)
+          self.newReleases = albums.items
+          self.updateScreenStateIfNeeded()
+      } catch {
+          self.screenState = .error("Yeni albümler alınırken hata oluştu.")
+      }
+  }
 
-    private func updateScreenStateIfNeeded() {
-        if newReleases != nil, userModel != nil, featuredPlayList != nil {
-            screenState = .loaded
-        }
-    }
+  @MainActor
+  private func fetchUserPlaylists() async {
+      do {
+          let playlists = try await getPlaylistUseCase.fetchUserPlaylist()
+          self.featuredPlayList = playlists
+          self.updateScreenStateIfNeeded()
+      } catch {
+          self.screenState = .error("Çalma listeleri alınırken hata oluştu.")
+      }
+  }
+
+  private func updateScreenStateIfNeeded() {
+      if newReleases != nil, userModel != nil, featuredPlayList != nil {
+          screenState = .loaded
+      }
+  }
+}
+
+//MARK: Helpers
+extension HomeViewModel {
+  func createHorizontalScrollViewUIModel(for playlistID: String, onTap: @escaping (String) -> Void) -> HorizontalScrollViewUIModel? {
+      guard let playlistModel = getPlaylistModel(playlistID) else {
+          return nil
+      }
+      return HorizontalScrollViewUIModel(response: playlistModel, onTap: onTap)
+  }
+  
+  func getPlaylistModel(_ id: String) -> PlayListDetailResponse? {
+      return playlistModels[id]
+  }
 }

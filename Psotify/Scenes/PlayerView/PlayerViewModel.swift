@@ -8,13 +8,13 @@
 import SwiftUI
 
 class PlayerViewModel: ObservableObject {
-    private let getSongUseCase: GetSongUseCaseProtocol
-    private let playerManager: PlayerManager
-    private let id: String
-
     @Published var song: SongResponse?
     @Published var totalTime: TimeInterval = 0.0
     @Published var currentTime: TimeInterval = 0.0
+
+    private let playerManager: PlayerManager
+    private let getSongUseCase: GetSongUseCaseProtocol
+    private let id: String
 
     init(
         getSongUseCase: GetSongUseCaseProtocol = AppDIContainer.shared.resolve(GetSongUseCaseProtocol.self),

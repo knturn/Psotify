@@ -13,7 +13,6 @@ struct SkeletonPlaceHolderView<Content: View>: View {
     private let itemHeight: CGFloat
     private let spacing: CGFloat
 
-
     private var itemCount: Int {
         let rows = Int((UIScreen.main.bounds.height / (itemHeight + spacing)))
         return rows * gridLayout.count

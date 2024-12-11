@@ -6,10 +6,12 @@
 //
 
 import Foundation
+
 protocol GetAlbumsUseCaseProtocol {
   func fetchNewReleases(limit: Int) async throws -> Albums
   func fetchOneAlbum(with id: String) async throws -> AlbumItem
 }
+
 final class GetAlbumsUseCase: GetAlbumsUseCaseProtocol {
   private let networkService: NetworkServiceProtocol
 
