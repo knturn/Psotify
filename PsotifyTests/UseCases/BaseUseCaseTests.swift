@@ -34,7 +34,7 @@ class BaseUseCaseTest: XCTestCase {
 
     func makeHTTPURLResponse(statusCode: Int) -> HTTPURLResponse {
         return HTTPURLResponse(
-            url: URL(string: "https://www.testurl.com")!,
+            url: anyUrl,
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
@@ -48,6 +48,10 @@ class BaseUseCaseTest: XCTestCase {
       let mock = MockNetworkService(parsedObject: parsedObject)
       let sut = useCaseInitializer(mock)
       return (sut, mock)
+  }
+
+  private var anyUrl: URL {
+    URL(string: "https://www.testurl.com")!
   }
 }
 

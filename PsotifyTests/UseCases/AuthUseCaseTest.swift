@@ -10,45 +10,17 @@ import Combine
 @testable import Psotify
 
 final class AuthUseCaseTests: XCTestCase {
-    func test_logIn_success() async throws {
-        // Given
-      let tokenResponse = PsotifyTokenResponse(
-          accessToken: "validAccessToken",
-          tokenType: "Bearer",
-          expiresIn: 3600,
-          refreshToken: "validRefreshToken"
-      )
 
-        let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(parsedObject: tokenResponse)
-        let mockKeychainService = MockKeyChainService()
-        let mockUserDefaultsService = MockUserDefaultsService()
-        let authUseCase = AuthUseCase(
-            networkService: mockNetworkService,
-            keychainService: mockKeychainService,
-            userDefaultsService: mockUserDefaultsService
-        )
-
-        let authCode = "validAuthCode"
-
-        // When
-        try await authUseCase.logIn(with: authCode)
-
-        // Then
-        XCTAssertEqual(mockKeychainService.savedData[KeychainServiceKeys.authCode.rawValue], authCode.data(using: .utf8))
-        let savedTokenModel: PsotifyTokenStorageModel? = mockUserDefaultsService.getElement(
-            forKey: UserDefaultsServiceKeys.tokenStorage.rawValue,
-            type: PsotifyTokenStorageModel.self
-        )
-        XCTAssertNotNil(savedTokenModel)
-        XCTAssertEqual(savedTokenModel?.accessToken, "validAccessToken")
-    }
-
-  func test_logIn_failure() async throws {
-      // Given
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: nil,
-          errorToThrow: SpotifyAuthError.invalidAuthCode
-      )
+  private func createSUTWithMocks(
+      tokenResponse: PsotifyTokenResponse? = nil,
+      errorToThrow: Error? = nil
+  ) -> (
+      authUseCase: AuthUseCase,
+      mockNetworkService: MockNetworkService<PsotifyTokenResponse>,
+      mockKeychainService: MockKeyChainService,
+      mockUserDefaultsService: MockUserDefaultsService
+  ) {
+      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(parsedObject: tokenResponse, errorToThrow: errorToThrow)
       let mockKeychainService = MockKeyChainService()
       let mockUserDefaultsService = MockUserDefaultsService()
       let authUseCase = AuthUseCase(
@@ -56,12 +28,42 @@ final class AuthUseCaseTests: XCTestCase {
           keychainService: mockKeychainService,
           userDefaultsService: mockUserDefaultsService
       )
+      return (authUseCase, mockNetworkService, mockKeychainService, mockUserDefaultsService)
+  }
 
+  func test_logIn_success() async throws {
+      // Given
+      let tokenResponse = PsotifyTokenResponse(
+          accessToken: "validAccessToken",
+          tokenType: "Bearer",
+          expiresIn: 3600,
+          refreshToken: "validRefreshToken"
+      )
+      let (sut, _, mockKeychainService, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
+      let authCode = "validAuthCode"
+
+      // When
+      try await sut.logIn(with: authCode)
+
+      // Then
+      XCTAssertEqual(mockKeychainService.savedData[KeychainServiceKeys.authCode.rawValue], authCode.data(using: .utf8))
+      let savedTokenModel: PsotifyTokenStorageModel? = mockUserDefaultsService.getElement(
+          forKey: UserDefaultsServiceKeys.tokenStorage.rawValue,
+          type: PsotifyTokenStorageModel.self
+      )
+      XCTAssertNotNil(savedTokenModel)
+      XCTAssertEqual(savedTokenModel?.accessToken, "validAccessToken")
+  }
+
+
+  func test_logIn_failure() async throws {
+      // Given
+      let (sut, mockNetworkService, _, _) = createSUTWithMocks(errorToThrow: SpotifyAuthError.invalidAuthCode)
       let authCode = "invalidAuthCode"
 
       // When/Then
       await XCTAssertThrowsErrorAsync(
-          try await authUseCase.logIn(with: authCode)
+          try await sut.logIn(with: authCode)
       ) { error in
           XCTAssertEqual(error as? SpotifyAuthError, .invalidAuthCode)
       }
@@ -78,16 +80,7 @@ final class AuthUseCaseTests: XCTestCase {
           expiresIn: 3600,
           refreshToken: "validRefreshToken"
       )
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: tokenResponse
-      )
-      let mockKeychainService = MockKeyChainService()
-      let mockUserDefaultsService = MockUserDefaultsService()
-      let authUseCase = AuthUseCase(
-          networkService: mockNetworkService,
-          keychainService: mockKeychainService,
-          userDefaultsService: mockUserDefaultsService
-      )
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
 
       let tokenStorageModel = PsotifyTokenStorageModel(
           response: .init(
@@ -104,7 +97,7 @@ final class AuthUseCaseTests: XCTestCase {
       )
 
       // When
-      try await authUseCase.refreshToken()
+      try await sut.refreshToken()
 
       // Then
       let savedTokenModel: PsotifyTokenStorageModel? = mockUserDefaultsService.getElement(
@@ -117,24 +110,16 @@ final class AuthUseCaseTests: XCTestCase {
   }
 
 
+
   func test_refreshToken_failure() async throws {
       // Given
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: nil,
-          errorToThrow: SpotifyAuthError.tokenUnavailable
-      )
-      let mockKeychainService = MockKeyChainService()
-      let mockUserDefaultsService = MockUserDefaultsService()
-      let authUseCase = AuthUseCase(
-          networkService: mockNetworkService,
-          keychainService: mockKeychainService,
-          userDefaultsService: mockUserDefaultsService
-      )
+      let (sut, _, _, _) = createSUTWithMocks()
 
-      // When/Then
+      // When
       await XCTAssertThrowsErrorAsync(
-          try await authUseCase.refreshToken()
+          try await sut.refreshToken()
       ) { error in
+      // Then
           XCTAssertEqual(error as? SpotifyAuthError, .tokenUnavailable)
       }
   }
@@ -148,16 +133,8 @@ final class AuthUseCaseTests: XCTestCase {
           expiresIn: 3600,
           refreshToken: "validRefreshToken"
       )
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: tokenResponse
-      )
-      let mockKeychainService = MockKeyChainService()
-      let mockUserDefaultsService = MockUserDefaultsService()
-      let authUseCase = AuthUseCase(
-          networkService: mockNetworkService,
-          keychainService: mockKeychainService,
-          userDefaultsService: mockUserDefaultsService
-      )
+
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks(tokenResponse: tokenResponse)
 
       let tokenStorage = PsotifyTokenStorageModel(response: tokenResponse)
 
@@ -167,10 +144,10 @@ final class AuthUseCaseTests: XCTestCase {
       )
 
       // When
-      try await authUseCase.refreshLoginState()
+      try await sut.refreshLoginState()
 
       // Then
-      let receivedState = await getStateFromPublisher(authUseCase.loginPublisher)
+      let receivedState = await getStateFromPublisher(sut.loginPublisher)
       XCTAssertEqual(receivedState, .login)
       XCTAssertTrue(mockNetworkService.recievedMessages.isEmpty) // no need fetch request did not triggered
   }
@@ -178,24 +155,9 @@ final class AuthUseCaseTests: XCTestCase {
 
   func test_refreshLoginState_whenTokenExpired() async throws {
       // Given
-      let tokenResponse = PsotifyTokenResponse(
-          accessToken: "expiredAccessToken",
-          tokenType: "Bearer",
-          expiresIn: -3600, // Token is expired
-          refreshToken: "validRefreshToken"
-      )
-      let mockNetworkService = MockNetworkService<PsotifyTokenResponse>(
-          parsedObject: nil
-      )
-      let mockKeychainService = MockKeyChainService()
-      let mockUserDefaultsService = MockUserDefaultsService()
-      let authUseCase = AuthUseCase(
-          networkService: mockNetworkService,
-          keychainService: mockKeychainService,
-          userDefaultsService: mockUserDefaultsService
-      )
+      let (sut, mockNetworkService, _, mockUserDefaultsService) = createSUTWithMocks()
 
-      let expiredTokenStorage = PsotifyTokenStorageModel(response: tokenResponse)
+      let expiredTokenStorage = PsotifyTokenStorageModel(response: .init(accessToken: "expiredAccessToken", tokenType: "Bearer", expiresIn:  -3600, refreshToken: "validRefreshToken"))
 
       try await mockUserDefaultsService.saveElement(
           model: expiredTokenStorage,
@@ -203,15 +165,14 @@ final class AuthUseCaseTests: XCTestCase {
       )
 
       // When
-      try await authUseCase.refreshLoginState()
+      try await sut.refreshLoginState()
 
       // Then
-      let receivedState = await getStateFromPublisher(authUseCase.loginPublisher)
+      let receivedState = await getStateFromPublisher(sut.loginPublisher)
       XCTAssertEqual(receivedState, .logout)
 
     XCTAssertTrue(mockNetworkService.recievedMessages.contains(.withParseError))
   }
-
 
     // Helper to retrieve the latest state from a Combine publisher
     private func getStateFromPublisher(_ publisher: AnyPublisher<UserLoginState, Never>) async -> UserLoginState {
@@ -225,7 +186,6 @@ final class AuthUseCaseTests: XCTestCase {
         }
     }
 }
-
 
  extension SpotifyAuthError: Equatable {
    public static func ==(lhs: SpotifyAuthError, rhs: SpotifyAuthError) -> Bool {

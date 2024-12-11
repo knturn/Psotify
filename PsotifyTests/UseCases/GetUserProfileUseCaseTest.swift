@@ -31,7 +31,7 @@ final class GetUserProfileUseCaseTests: BaseUseCaseTest {
     // Given
     let expectedError = NSError(domain: "MockNetworkService", code: 3, userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
 
-    let (sut, mock) = createSUT { mock in
+    let (sut, _) = createSUT { mock in
       GetUserProfileUseCase(networkService: mock)
     }
 

@@ -37,7 +37,7 @@ final class NetworkServiceTests: XCTestCase {
       URLProtocolStub.stub(data: data, response: makeHTTPURLResponse(statusCode: 200), error: nil)
 
       // When
-      let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
+      let request = URLRequest(url: anyUrl)
       do {
           let result: PsotifyTokenResponse = try await sut.fetch(request: request)
 
@@ -56,7 +56,7 @@ final class NetworkServiceTests: XCTestCase {
     URLProtocolStub.stub(data: Data(), response: makeHTTPURLResponse(statusCode: 404), error: nil)
 
     // When
-    let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
+    let request = URLRequest(url: anyUrl)
 
     // Then
     do {
@@ -74,7 +74,7 @@ final class NetworkServiceTests: XCTestCase {
     URLProtocolStub.stub(data: invalidJSON, response: makeHTTPURLResponse(statusCode: 200), error: nil)
 
     // When
-    let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
+    let request = URLRequest(url: anyUrl)
 
     // Then
     do {
@@ -91,7 +91,7 @@ final class NetworkServiceTests: XCTestCase {
     URLProtocolStub.stub(data: nil, response: makeHTTPURLResponse(statusCode: 200), error: nil)
 
     // When
-    let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
+    let request = URLRequest(url: anyUrl)
 
     // Then
     do {
@@ -108,7 +108,7 @@ final class NetworkServiceTests: XCTestCase {
     URLProtocolStub.stub(data: nil, response: nil, error: URLError(.notConnectedToInternet))
 
     // When
-    let request = URLRequest(url: URL(string: "https://www.testurl.com")!)
+    let request = URLRequest(url: anyUrl)
 
     // Then
     do {
@@ -122,11 +122,15 @@ final class NetworkServiceTests: XCTestCase {
   // MARK: - Helpers
     private func makeHTTPURLResponse(statusCode: Int) -> HTTPURLResponse {
       return HTTPURLResponse(
-        url: URL(string: "https://www.testurl.com")!,
+        url: anyUrl,
         statusCode: statusCode,
         httpVersion: nil,
         headerFields: nil
       )!
+    }
+
+    private var anyUrl: URL {
+      URL(string: "https://www.testurl.com")!
     }
   }
 
