@@ -601,7 +601,6 @@
 			children = (
 				774389E62CFC82CF00143C7D /* piano.mp3 */,
 				777C61042CE6F4F00085EF2F /* Assets.xcassets */,
-				77EE45002CE74819004A7EAD /* Images */,
 				77EE44F92CE72E81004A7EAD /* Info.plist */,
 			);
 			path = Resources;
@@ -678,13 +677,6 @@
 				77EE44FB2CE741AC004A7EAD /* Launch.swift */,
 			);
 			path = Launch;
-			sourceTree = "<group>";
-		};
-		77EE45002CE74819004A7EAD /* Images */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		77EE45032CE75F5D004A7EAD /* Utilities */ = {
