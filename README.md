@@ -16,7 +16,7 @@ Project written with swift language. UI Framework is SwiftUI.
 ## Application Architecture
 - *Project written with base SOLID principles, modular, developable and testable Clean Architecture, used MVVM for UI layer.*
 - *Swift Concurrency and Combine*
-- *DI Container pattern was used for dependency injection in the project.When you want to add a dependency to somewhere. You can bind it then resolve it with AppDIContainer *
+- *DI Container pattern was used for dependency injection in the project.When you want to add a dependency to somewhere. You can bind it then resolve it with AppDIContainer*
 - *Factory and builder were used to create requests object.*
 - *UserDefaultsService was designed as singleton.* 
 - *Services were designed as generic in terms of modularity and independence.*
@@ -24,7 +24,7 @@ Project written with swift language. UI Framework is SwiftUI.
 - *Architectural pattern*
 ![Ekran Resmi 2024-12-12 19 39 10](https://github.com/user-attachments/assets/a3e80aea-2366-4f82-a49e-4d72ae441e13)
 - *Request Flow Example*
-![Ekran Resmi 2024-12-12 22 51 50](https://github.com/user-attachments/assets/824fe7f8-7469-49e7-80d2-9df800d60aa5)
+![Ekran Resmi 2024-12-13 09 28 18](https://github.com/user-attachments/assets/44387f42-8b24-453a-b783-48ad5a2aa624)
 
 ## Folder Structure and Architecture
 - *PsotifyTest*
