@@ -1,0 +1,29 @@
+name: Install Dependencies
+on:
+  workflow_call:
+    inputs:
+      use_cache:
+        description: "Should we use Swift package cache?"
+        required: false
+        type: boolean
+jobs:
+  setup:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install Gems
+        run: bundle install
+
+      - name: Swift Packages Cache
+        if: ${{ inputs.use_cache }}
+        uses: actions/cache@v2
+        with:
+          path: |
+            Build/SourcePackages
+            Build/Build/Products
+          key: ${{ runner.os }}-deps-v1-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-deps-v1-

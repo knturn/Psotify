@@ -10,21 +10,13 @@ jobs:
   build_and_deploy:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        uses: ./.github/workflows/install_dependencies.yml
+        with:
+          use_cache: false
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-
-      - name: Install Bundler
-        run: gem install bundler
-
-      - name: Install gems
-        run: bundle install
-
-      - name: Build .ipa and Upload to App Center
+      - name: Build IPA and Upload to App Center
         run: |
-          # Run fastlane to build the ipa and upload to App Center
-          bundle exec fastlane unit_test
-          bundle exec fastlane appcenter_upload api_token:$APP_CENTER_API_TOKEN owner_name:"Kaan Turan" app_name:"Psotify" ipa:"Build/Psotify.ipa"
+          bundle exec fastlane build_and_upload
         env:
           APP_CENTER_API_TOKEN: ${{ secrets.APP_CENTER_API_TOKEN }}
