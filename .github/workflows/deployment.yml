@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-14
     steps:
       - name: Install Dependencies
-        uses: ./.github/actions/install_dependencies
+        uses: ./.github/actions/install_dependencies.yml
         with:
           use_cache: false
 
