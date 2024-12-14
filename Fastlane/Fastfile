@@ -7,7 +7,8 @@ platform :ios do
     scan(
       scheme: "Psotify",
       clean: options[:clean],
-      skip_package_dependencies_resolution: options[:skip_package_dependencies_resolution]
+      skip_package_dependencies_resolution: options[:skip_package_dependencies_resolution],
+       only_testing: "PsotifyTests"
     )
   end
 end
