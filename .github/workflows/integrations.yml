@@ -42,7 +42,7 @@ jobs:
       - name: Run Tests
         run: |
           if [[ "${{ steps['Swift Packages Cache'].outputs.cache-hit }}" != "true" ]]; then
-            bundle exec fastlane unit_test
+            bundle exec fastlane unit_tests
           else
-            bundle exec fastlane unit_test skip_package_dependencies_resolution:true
+            bundle exec fastlane unit_tests skip_package_dependencies_resolution:true
           fi
