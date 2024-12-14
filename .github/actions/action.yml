@@ -1,4 +1,6 @@
 name: Install Dependencies
+description: Reusable workflow to install dependencies and optionally cache Swift packages.
+
 on:
   workflow_call:
     inputs:
@@ -6,11 +8,14 @@ on:
         description: "Should we use Swift package cache?"
         required: false
         type: boolean
+
 jobs:
   setup:
+    name: Setup Dependencies
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
       
       - name: Install Bundler
         run: gem install bundler

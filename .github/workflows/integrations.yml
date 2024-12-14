@@ -8,10 +8,11 @@ on:
 
 jobs:
   test:
+    name: Run Unit Tests
     runs-on: macos-14
     steps:
       - name: Install Dependencies
-        uses: ./.github/workflows/install_dependencies.yml
+        uses: ./.github/actions/install_dependencies
         with:
           use_cache: true
 
@@ -20,13 +21,15 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
 
+      # Run tests based on cache availability
       - name: Run Tests
         run: |
-          if [[ "${{ steps.cache.outputs.cache-hit }}" != "true" ]]; then
+          if [[ "${{ steps.Install_Dependencies.outputs.cache-hit }}" != "true" ]]; then
             bundle exec fastlane unit_test
           else
             bundle exec fastlane unit_test skip_package_dependencies_resolution:true
