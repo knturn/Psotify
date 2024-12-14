@@ -1,0 +1,30 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - psotify/Phase-1/unit-testing
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install gems
+        run: bundle install
+
+      - name: Build .ipa and Upload to App Center
+        run: |
+          # Run fastlane to build the ipa and upload to App Center
+          bundle exec fastlane unit_test
+          bundle exec fastlane appcenter_upload api_token:$APP_CENTER_API_TOKEN owner_name:"Kaan Turan" app_name:"Psotify" ipa:"Build/Psotify.ipa"
+        env:
+          APP_CENTER_API_TOKEN: ${{ secrets.APP_CENTER_API_TOKEN }}

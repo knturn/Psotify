@@ -2,13 +2,31 @@ fastlane_version '2.157'
 default_platform :ios
 
 platform :ios do
-  desc 'Builds project and executes unit tests'
+  desc 'Builds project, executes unit tests, and uploads to App Center'
   lane :unit_test do |options|
+    # Execute unit tests
     scan(
       scheme: "Psotify",
       clean: options[:clean],
       skip_package_dependencies_resolution: options[:skip_package_dependencies_resolution],
-       only_testing: "PsotifyTests"
+      only_testing: "PsotifyTests"
+    )
+
+    # Create .ipa file after unit tests
+    gym(
+      scheme: "Psotify",                  # Şemayı belirtin
+      clean: true,                         # Temizleme işlemi yap
+      output_directory: "Build",           # Çıktı dizini
+      output_name: "Psotify.ipa"           # Çıktı dosyasının ismi
+    )
+
+    # Upload the build to App Center after creating .ipa
+    appcenter_upload(
+      api_token: ENV["APP_CENTER_API_TOKEN"],
+      owner_name: "Kaan Turan",
+      app_name: "Psotify",          
+      ipa: "Build/Psotify.ipa"
     )
   end
 end
+
