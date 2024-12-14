@@ -11,11 +11,29 @@ jobs:
     name: Build and Deploy
     runs-on: macos-14
     steps:
-      - name: Install Dependencies
-        uses: ./.github/actions/install_dependencies.yml
-        with:
-          use_cache: false
+      # Kodun checkout edilmesi
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
+      # Bundler'ın yüklenmesi
+      - name: Install Bundler
+        run: gem install bundler
+
+      # Ruby gem'lerinin yüklenmesi
+      - name: Install Gems
+        run: bundle install
+
+      # Swift Packages için cache kullanımı
+      - name: Swift Packages Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            Build/SourcePackages
+            Build/Build/Products
+          key: ${{ runner.os }}-deps-v1-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-deps-v1-
+
+      # IPA'nın oluşturulması ve App Center'a yüklenmesi
       - name: Build IPA and Upload to App Center
         run: |
           # Build the IPA and upload it to App Center

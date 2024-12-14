@@ -11,10 +11,23 @@ jobs:
     name: Run Unit Tests
     runs-on: macos-14
     steps:
-      - name: Install Dependencies
-        uses: ./.github/actions/install_dependencies.yml
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install Gems
+        run: bundle install
+
+      - name: Swift Packages Cache
+        uses: actions/cache@v2
         with:
-          use_cache: true
+          path: |
+            Build/SourcePackages
+            Build/Build/Products
+          key: ${{ runner.os }}-deps-v1-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-deps-v1-
 
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -26,10 +39,9 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      # Run tests based on cache availability
       - name: Run Tests
         run: |
-          if [[ "${{ steps.Install_Dependencies.outputs.cache-hit }}" != "true" ]]; then
+          if [[ "${{ steps['Swift Packages Cache'].outputs.cache-hit }}" != "true" ]]; then
             bundle exec fastlane unit_test
           else
             bundle exec fastlane unit_test skip_package_dependencies_resolution:true
