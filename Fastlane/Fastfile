@@ -6,8 +6,7 @@ platform :ios do
   lane :unit_test do |options|
     scan(
       scheme: "Psotify",
-      clean: options[:clean],
-      skip_package_dependencies_resolution: options[:skip_package_dependencies_resolution]
+      clean: options[:clean]
     )
   end
 end
