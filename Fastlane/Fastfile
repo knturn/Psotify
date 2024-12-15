@@ -13,6 +13,7 @@ platform :ios do
   desc 'Builds the IPA and uploads to App Center'
   lane :appcenter_upload do
     gym(
+      project: "Psotify.xcodeproj",
       scheme: "Psotify",
       output_directory: "Build",
       output_name: "Psotify.ipa"
