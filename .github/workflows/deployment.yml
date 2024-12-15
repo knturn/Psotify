@@ -28,7 +28,7 @@ jobs:
       - name: Build IPA and Upload to App Center
         run: |
           # Build the IPA and upload it to App Center with automatic signing
-          xcodebuild -xcodeproj Psotify.xcodeproj -scheme Psotify -sdk iphoneos -configuration Release -archivePath $PWD/build/Psotify.xcarchive clean archive -allowProvisioningUpdates
+          xcodebuild -project Psotify.xcodeproj -scheme Psotify -sdk iphoneos -configuration Release -archivePath $PWD/build/Psotify.xcarchive clean archive -allowProvisioningUpdates
           bundle exec fastlane build_and_upload
         env:
           APP_CENTER_API_TOKEN: ${{ secrets.APP_CENTER_API_TOKEN }}
