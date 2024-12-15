@@ -1107,6 +1107,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0.1;
 				DEVELOPMENT_ASSET_PATHS = "\"Psotify/Preview Content\"";
+				DEVELOPMENT_TEAM = KRAPRS5G22;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Psotify/Resources/Info.plist;
@@ -1135,6 +1136,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0.1;
 				DEVELOPMENT_ASSET_PATHS = "\"Psotify/Preview Content\"";
+				DEVELOPMENT_TEAM = KRAPRS5G22;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Psotify/Resources/Info.plist;
