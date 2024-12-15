@@ -9,4 +9,20 @@ platform :ios do
       clean: options[:clean]
     )
   end
+
+  desc 'Builds the IPA and uploads to App Center'
+  lane :appcenter_upload do
+    gym(
+      scheme: "Psotify",
+      output_directory: "Build",
+      output_name: "Psotify.ipa"
+    )
+
+    appcenter_upload(
+      api_token: ENV["APP_CENTER_API_TOKEN"],
+      owner_name: "Kaan Turan",
+      app_name: "Psotify",
+      ipa: "Build/Psotify.ipa"
+    )
+  end
 end
