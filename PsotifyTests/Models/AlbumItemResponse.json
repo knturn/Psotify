@@ -1,0 +1,51 @@
+
+{
+  "album_type": "album",
+  "total_tracks": 12,
+  "available_markets": ["US", "CA", "GB"],
+  "external_urls": {
+    "spotify": "https://open.spotify.com/album/1234567890abcdef"
+  },
+  "href": "https://api.spotify.com/v1/albums/1234567890abcdef",
+  "id": "1234567890abcdef",
+  "images": [
+    {
+      "url": "https://i.scdn.co/image/abc123",
+      "height": 300,
+      "width": 300
+    }
+  ],
+  "name": "Sample Album",
+  "release_date": "2023-11-01",
+  "release_date_precision": "day",
+  "restrictions": {
+    "reason": "market_restricted"
+  },
+  "type": "album",
+  "uri": "spotify:album:1234567890abcdef",
+  "artists": [
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/abcdef123456"
+      },
+      "href": "https://api.spotify.com/v1/artists/abcdef123456",
+      "id": "abcdef123456",
+      "name": "Artist Name",
+      "type": "artist",
+      "uri": "spotify:artist:abcdef123456"
+    }
+  ],
+  "tracks": null,
+  "copyrights": [
+    {
+      "text": "© 2023 Spotify",
+      "type": "C"
+    }
+  ],
+  "external_ids": {
+    "isrc": "US1234567890"
+  },
+  "genres": ["pop", "rock"],
+  "label": "Spotify Music",
+  "popularity": 80
+}

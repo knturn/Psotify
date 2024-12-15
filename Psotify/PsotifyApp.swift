@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct PsotifyApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  private let diContainer = AppDIContainer.shared
+
+  init() {
+    setupDIContainer(with: diContainer)
+  }
+  var body: some Scene {
+    WindowGroup {
+      MainView()
+        .preferredColorScheme(.dark)
+        .environmentObject(diContainer.makeNavigation())
     }
+  }
 }
